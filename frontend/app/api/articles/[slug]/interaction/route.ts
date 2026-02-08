@@ -62,3 +62,32 @@ export async function POST(
     );
   }
 }
+
+export async function PATCH(request: Request) {
+  try {
+    const token = (await cookies()).get('qabilah_token')?.value;
+    if (!token)
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+    const { id, content } = await request.json();
+
+    await connectToDatabase();
+
+    // Ensure the note belongs to the user
+    const updatedNote = await Note.findOneAndUpdate(
+      { _id: id, userId: decoded.userId },
+      { content, updatedAt: new Date() },
+      { new: true }
+    );
+
+    if (!updatedNote)
+      return NextResponse.json({ message: 'Note not found' }, { status: 404 });
+
+    return NextResponse.json(updatedNote);
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: 'Update failed' }, { status: 500 });
+  }
+}

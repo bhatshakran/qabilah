@@ -13,6 +13,7 @@ interface SidebarProps {
   setTab: (s: 'halaqa' | 'notebook') => void;
 }
 
+const slug = 'masjid-al-aqsa-history';
 export default function ArticleSidebar({
   isOpen,
   onClose,
@@ -27,7 +28,6 @@ export default function ArticleSidebar({
     personalNotes: Note[];
   }>({ publicComments: [], personalNotes: [] });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const slug = 'masjid-al-aqsa-history';
   // Fetch Data on Open
   useEffect(() => {
     if (isOpen) {
@@ -35,8 +35,23 @@ export default function ArticleSidebar({
         .then((res) => res.json())
         .then((json) => setData(json));
     }
-  }, [isOpen, slug]);
+  }, [isOpen]);
 
+  const handleNoteUpdate = (noteId: string, newContent: string) => {
+    const updatedNotes = data.personalNotes.map((note: Note) =>
+      note._id === noteId
+        ? {
+            ...note,
+            content: newContent,
+            updatedAt: new Date(),
+          }
+        : note
+    );
+    setData((prev) => ({
+      ...prev,
+      personalNotes: updatedNotes,
+    }));
+  };
   const handleSubmit = async () => {
     if (!content.trim() || !user) return;
     setIsSubmitting(true);
@@ -122,6 +137,7 @@ export default function ArticleSidebar({
           <NotebookView
             personalNotes={data.personalNotes}
             sentenceIndex={sentenceIndex}
+            onUpdate={handleNoteUpdate}
           />
         )}
       </div>
@@ -193,27 +209,88 @@ function HalaqaFeed({
 function NotebookView({
   personalNotes,
   sentenceIndex,
+  onUpdate,
 }: {
   personalNotes: Note[];
   sentenceIndex: number | null;
+  onUpdate: (noteId: string, newContent: string) => void;
 }) {
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editText, setEditText] = useState('');
+
+  const handleStartEdit = (note: Note) => {
+    setEditingId(note._id);
+    setEditText(note.content);
+  };
+
+  const handleSave = async () => {
+    // Call the API
+    const res = await fetch(`/api/articles/${slug}/interaction`, {
+      method: 'PATCH',
+      body: JSON.stringify({ id: editingId, content: editText }),
+    });
+
+    if (res.ok) {
+      onUpdate(editingId as string, editText);
+      setEditingId(null);
+    }
+  };
   return (
     <div className="space-y-4">
+      {personalNotes.length === 0 && (
+        <p className="text-zinc-600 text-xs text-center py-10 italic">
+          No notes for this section yet.
+        </p>
+      )}
+
       {personalNotes
-        .filter((p) => p.sentenceIndex == sentenceIndex)
+        .filter((c) => c.sentenceIndex == sentenceIndex)
         .map((note) => (
           <div
-            key={note.createdAt.toString()}
-            className="bg-zinc-800/30 border border-zinc-800 p-4 rounded-2xl"
+            key={note._id}
+            className="bg-zinc-800/30 border border-zinc-800 p-4 rounded-2xl group transition-all hover:border-zinc-700"
           >
-            <p className="text-sm text-zinc-300 italic">
-              &quot;{note.content}&quot;
-            </p>
-            <div className="mt-3 flex justify-end">
-              <button className="text-[10px] font-bold text-zinc-600 hover:text-white uppercase tracking-widest">
-                Edit Note
-              </button>
-            </div>
+            {editingId === note._id ? (
+              <div className="space-y-3">
+                <textarea
+                  className="w-full bg-black border border-amber-500/50 rounded-xl p-3 text-sm text-white outline-none"
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                  autoFocus
+                />
+                <div className="flex justify-end gap-2">
+                  <button
+                    onClick={() => setEditingId(null)}
+                    className="text-[10px] font-bold text-zinc-500 uppercase"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={() => handleSave()}
+                    className="text-[10px] font-bold text-amber-500 uppercase"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <p className="text-sm text-zinc-300 leading-relaxed italic">
+                  &quot;{note.content}&quot;
+                </p>
+                <div className="mt-3 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <span className="text-[9px] text-zinc-600 uppercase font-bold tracking-widest">
+                    {new Date(note.createdAt).toLocaleDateString()}
+                  </span>
+                  <button
+                    onClick={() => handleStartEdit(note)}
+                    className="text-[10px] font-bold text-amber-500/60 hover:text-amber-500 uppercase tracking-widest"
+                  >
+                    Edit
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         ))}
     </div>

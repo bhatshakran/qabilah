@@ -29,5 +29,7 @@ const NoteSchema = new mongoose.Schema({
 
 // Composite index: Ensure fast lookup for a specific user on a specific article
 NoteSchema.index({ userId: 1, slug: 1 });
-export type Note = InferSchemaType<typeof NoteSchema>;
+export type Note = InferSchemaType<typeof NoteSchema> & {
+  _id: string;
+};
 export default mongoose.models.Note || mongoose.model('Note', NoteSchema);
