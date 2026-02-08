@@ -1,25 +1,26 @@
-'use client';
-import { useState } from 'react';
-import { Loader2, User, Mail, Lock } from 'lucide-react';
+"use client";
+import { useState } from "react";
+import { Loader2, User, Mail, Lock } from "lucide-react";
 
 export default function SignUpForm() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
+    name: "",
+    email: "",
+    password: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  console.log(loading, "loading");
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      const res = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("/api/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
@@ -29,11 +30,11 @@ export default function SignUpForm() {
         // Successful signup - you could trigger a login here or redirect
         window.location.reload(); // Quick way to reset state for now
       } else {
-        setError(data.message || 'Signup failed');
+        setError(data.message || "Signup failed");
       }
     } catch (err) {
       console.log(err);
-      setError('Connection error. Please try again.');
+      setError("Connection error. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -134,17 +135,17 @@ export default function SignUpForm() {
           disabled={loading}
           className="w-full py-4 mt-4 bg-linear-to-br from-amber-400 to-amber-600 text-black font-black uppercase tracking-tighter rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-amber-600/20 disabled:opacity-50 flex items-center justify-center gap-2"
         >
-          {loading ? (
+          {/* {loading ? (
             <Loader2 className="animate-spin" size={20} />
-          ) : (
-            'Enlist Now'
-          )}
+          ) : ( */}
+          Enlist Now
+          {/* )} */}
         </button>
       </form>
 
       <div className="mt-8 text-center">
         <p className="text-xs text-zinc-500 font-medium">
-          Already part of the tribe?{' '}
+          Already part of the tribe?{" "}
           <button className="text-amber-500 font-bold hover:underline underline-offset-4">
             Sign In
           </button>

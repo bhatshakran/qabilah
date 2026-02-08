@@ -1,19 +1,18 @@
-'use client';
-import Link from 'next/link';
-import { useStreak } from '../contexts/streakContext';
-import { useState } from 'react';
-import SignInForm from './forms/signin';
-import { createPortal } from 'react-dom';
-import { useAuth } from '../contexts/authContext';
+"use client";
+import Link from "next/link";
+import { useStreak } from "../contexts/streakContext";
+import { useState } from "react";
+import SignInForm from "./forms/signin";
+import { createPortal } from "react-dom";
+import { useAuth } from "../contexts/authContext";
 
 const Header = () => {
   const { user, loading, logout } = useAuth();
   const { streak } = useStreak();
   const [showSignin, setShowSignin] = useState(false);
-
   return (
     <div className="w-full flex items-center justify-between mb-10 pt-4 max-w-2xl mx-auto">
-      <Link href={'/'} className="flex items-center gap-3">
+      <Link href={"/"} className="flex items-center gap-3">
         {/* Logo: Geometric Crescent */}
         <div className="relative w-10 h-10 flex items-center justify-center cursor-pointer">
           <div className="absolute inset-0 bg-amber-500 rounded-xl rotate-12 opacity-20 animate-pulse"></div>
@@ -36,10 +35,10 @@ const Header = () => {
 
       {/* Streak Counter */}
       <div
-        className={`flex items-center gap-2 px-4 py-2 rounded-2xl border transition-all ${streak > 0 ? 'bg-orange-500/10 border-orange-500/30' : 'bg-zinc-900 border-zinc-800'}`}
+        className={`flex items-center gap-2 px-4 py-2 rounded-2xl border transition-all ${streak > 0 ? "bg-orange-500/10 border-orange-500/30" : "bg-zinc-900 border-zinc-800"}`}
       >
         <span
-          className={`text-xl ${streak > 0 ? 'animate-bounce' : 'grayscale'}`}
+          className={`text-xl ${streak > 0 ? "animate-bounce" : "grayscale"}`}
         >
           🔥
         </span>
@@ -48,9 +47,9 @@ const Header = () => {
             Streak
           </span>
           <span
-            className={`text-sm font-black ${streak > 0 ? 'text-orange-500' : 'text-zinc-400'}`}
+            className={`text-sm font-black ${streak > 0 ? "text-orange-500" : "text-zinc-400"}`}
           >
-            {streak} {streak === 1 ? 'Day' : 'Days'}
+            {streak} {streak === 1 ? "Day" : "Days"}
           </span>
         </div>
       </div>
@@ -81,6 +80,7 @@ const Header = () => {
       </div>
 
       {showSignin &&
+        !user &&
         createPortal(
           <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
             {/* 1. Dark Backdrop Overlay */}
@@ -102,7 +102,7 @@ const Header = () => {
               <SignInForm />
             </div>
           </div>,
-          document.body
+          document.body,
         )}
     </div>
   );

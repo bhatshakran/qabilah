@@ -1,15 +1,13 @@
-'use client';
-import { useState, useEffect, useEffectEvent } from 'react';
-import wordsData from '../public/words_seed.json';
-import FrontSide from './_components/frontside';
-import Backside from './_components/backside';
-import ProgressBar from './_components/progress_bar';
-import Result from './_components/result';
-import Library from './_components/library';
-import Map from './_components/map';
-import Reader from './_components/reader';
-import readerData from '../public/sentences.json';
-import { useStreak } from './contexts/streakContext';
+"use client";
+import { useState, useEffect, useEffectEvent } from "react";
+import wordsData from "../public/words_seed.json";
+import FrontSide from "./_components/frontside";
+import Backside from "./_components/backside";
+import ProgressBar from "./_components/progress_bar";
+import Result from "./_components/result";
+import Library from "./_components/library";
+import Map from "./_components/map";
+import { useStreak } from "./contexts/streakContext";
 export interface CurrentWord {
   rank: number;
   arabic: string;
@@ -31,8 +29,8 @@ export default function FlashcardApp() {
   const [queue, setQueue] = useState<typeof wordsData>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const currentWord = queue[0];
-  const [view, setView] = useState('map'); // 'study' or 'library'
-  const [searchQuery, setSearchQuery] = useState('');
+  const [view, setView] = useState("map"); // 'study' or 'library'
+  const [searchQuery, setSearchQuery] = useState("");
   const [selectedLevel, setSelectedLevel] = useState(1);
   const [isReviewMode, setIsReviewMode] = useState(false);
   const wordsPerLevel = 10;
@@ -40,11 +38,11 @@ export default function FlashcardApp() {
   const levelWords = wordsData.filter(
     (w) =>
       w.rank > (selectedLevel - 1) * wordsPerLevel &&
-      w.rank <= selectedLevel * wordsPerLevel
+      w.rank <= selectedLevel * wordsPerLevel,
   );
 
   const masteredInLevel = levelWords.filter((w) =>
-    masteredIds.includes(w.rank)
+    masteredIds.includes(w.rank),
   ).length;
   const isLevelComplete = masteredInLevel === levelWords.length;
 
@@ -52,7 +50,7 @@ export default function FlashcardApp() {
     setIsLoaded(false); // Ensure we hide the UI while calculating
 
     const savedMastered = JSON.parse(
-      localStorage.getItem('mastered_words') || '[]'
+      localStorage.getItem("mastered_words") || "[]",
     );
     setMasteredIds(savedMastered);
 
@@ -60,12 +58,12 @@ export default function FlashcardApp() {
     const allWordsInThisLevel = wordsData.filter(
       (w) =>
         w.rank > (selectedLevel - 1) * wordsPerLevel &&
-        w.rank <= selectedLevel * wordsPerLevel
+        w.rank <= selectedLevel * wordsPerLevel,
     );
 
     // 2. Identify which of these are NOT mastered
     const unmastered = allWordsInThisLevel.filter(
-      (w) => !savedMastered.includes(w.rank)
+      (w) => !savedMastered.includes(w.rank),
     );
 
     if (unmastered.length > 0) {
@@ -106,18 +104,18 @@ export default function FlashcardApp() {
     if (!isReviewMode) {
       const newMastered = [...masteredIds, id];
       setMasteredIds(newMastered);
-      localStorage.setItem('mastered_words', JSON.stringify(newMastered));
+      localStorage.setItem("mastered_words", JSON.stringify(newMastered));
 
       setQueue((prev) => prev.slice(1));
 
-      const today = new Date().toISOString().split('T')[0];
-      const lastDate = localStorage.getItem('last_study_date');
+      const today = new Date().toISOString().split("T")[0];
+      const lastDate = localStorage.getItem("last_study_date");
 
       if (lastDate !== today) {
         const newStreak = streakCtx.streak + 1;
         streakCtx.setStreak(newStreak);
-        localStorage.setItem('streak_count', newStreak.toString());
-        localStorage.setItem('last_study_date', today);
+        localStorage.setItem("streak_count", newStreak.toString());
+        localStorage.setItem("last_study_date", today);
       }
     }
     // Just remove from queue and move on
@@ -130,18 +128,18 @@ export default function FlashcardApp() {
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!currentWord) return;
-      if (e.code === 'Space') {
+      if (e.code === "Space") {
         e.preventDefault();
         setIsFlipped((v) => !v);
       }
       if (isFlipped) {
-        if (e.key === '1') handleAgain();
-        if (e.key === '2') handleGood();
-        if (e.key === '3') markAsMastered(currentWord.rank);
+        if (e.key === "1") handleAgain();
+        if (e.key === "2") handleGood();
+        if (e.key === "3") markAsMastered(currentWord.rank);
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isFlipped, currentWord]);
 
   // 4. SESSION COMPLETE STATE
@@ -159,7 +157,7 @@ export default function FlashcardApp() {
         masteredCount={masteredCount}
         wordsAvailableCount={wordsData.length}
       />
-      {view == 'map' ? (
+      {view == "map" ? (
         <Map
           masteredIds={masteredIds}
           setSelectedLevel={setSelectedLevel}
@@ -168,7 +166,7 @@ export default function FlashcardApp() {
           wordsData={wordsData}
           wordsPerLevel={wordsPerLevel}
         />
-      ) : view == 'library' ? (
+      ) : view == "library" ? (
         <Library
           masteredIds={masteredIds}
           searchQuery={searchQuery}
@@ -200,7 +198,7 @@ export default function FlashcardApp() {
             </div>
           )}
           <div
-            className={`relative w-full h-full min-h-[400px] transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}
+            className={`relative w-full h-full min-h-[400px] transition-transform duration-500 transform-style-3d ${isFlipped ? "rotate-y-180" : ""}`}
           >
             {/* Front Side (Arabic) */}
             <FrontSide currentWord={currentWord} />
@@ -221,14 +219,14 @@ export default function FlashcardApp() {
       {/* Bottom Navigation */}
       <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-zinc-900/80 backdrop-blur-xl border border-zinc-800 p-2 rounded-full flex gap-2 shadow-2xl">
         <button
-          onClick={() => setView('map')}
-          className={`px-6 py-2 cursor-pointer rounded-full text-xs font-black transition-all ${view === 'map' ? 'bg-amber-500 text-black' : 'text-zinc-400'}`}
+          onClick={() => setView("map")}
+          className={`px-6 py-2 cursor-pointer rounded-full text-xs font-black transition-all ${view === "map" ? "bg-amber-500 text-black" : "text-zinc-400"}`}
         >
           MAP
         </button>
         <button
-          onClick={() => setView('library')}
-          className={`px-6 py-2 cursor-pointer rounded-full text-xs font-black transition-all ${view === 'library' ? 'bg-amber-500 text-black' : 'text-zinc-400'}`}
+          onClick={() => setView("library")}
+          className={`px-6 py-2 cursor-pointer rounded-full text-xs font-black transition-all ${view === "library" ? "bg-amber-500 text-black" : "text-zinc-400"}`}
         >
           LIBRARY
         </button>

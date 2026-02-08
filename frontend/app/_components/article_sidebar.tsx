@@ -1,19 +1,19 @@
-'use client';
-import { MessageSquare, BookOpen, X, Heart, Send, Loader2 } from 'lucide-react';
-import { useAuth } from '../contexts/authContext';
-import { useEffect, useState } from 'react';
-import { Comment } from '../models/comment';
-import { Note } from '../models/note';
+"use client";
+import { MessageSquare, BookOpen, X, Heart, Send, Loader2 } from "lucide-react";
+import { useAuth } from "../contexts/authContext";
+import { useEffect, useState } from "react";
+import { Comment } from "../models/comment";
+import { Note } from "../models/note";
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
   sentenceIndex: number | null;
-  tab: 'halaqa' | 'notebook';
-  setTab: (s: 'halaqa' | 'notebook') => void;
+  tab: "halaqa" | "notebook";
+  setTab: (s: "halaqa" | "notebook") => void;
 }
 
-const slug = 'masjid-al-aqsa-history';
+const slug = "masjid-al-aqsa-history";
 export default function ArticleSidebar({
   isOpen,
   onClose,
@@ -22,7 +22,7 @@ export default function ArticleSidebar({
   setTab,
 }: SidebarProps) {
   const { user } = useAuth();
-  const [content, setContent] = useState('');
+  const [content, setContent] = useState("");
   const [data, setData] = useState<{
     publicComments: Comment[];
     personalNotes: Note[];
@@ -36,7 +36,12 @@ export default function ArticleSidebar({
         .then((json) => setData(json));
     }
   }, [isOpen]);
-
+  const handleNoteDelete = (noteId: string) => {
+    setData((prev) => ({
+      ...prev,
+      personalNotes: prev.personalNotes.filter((note) => note._id !== noteId),
+    }));
+  };
   const handleNoteUpdate = (noteId: string, newContent: string) => {
     const updatedNotes = data.personalNotes.map((note: Note) =>
       note._id === noteId
@@ -45,7 +50,7 @@ export default function ArticleSidebar({
             content: newContent,
             updatedAt: new Date(),
           }
-        : note
+        : note,
     );
     setData((prev) => ({
       ...prev,
@@ -57,20 +62,20 @@ export default function ArticleSidebar({
     setIsSubmitting(true);
     try {
       const res = await fetch(`/api/articles/${slug}/interaction`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          type: tab === 'halaqa' ? 'comment' : 'note',
+          type: tab === "halaqa" ? "comment" : "note",
           sentenceIndex: sentenceIndex,
           content: content,
-          authorName: user.email.split('@')[0],
+          authorName: user.email.split("@")[0],
         }),
       });
 
       if (res.ok) {
         const newItem = await res.json();
         // Update local state instantly
-        if (tab === 'halaqa') {
+        if (tab === "halaqa") {
           setData((prev) => ({
             ...prev,
             publicComments: [newItem, ...prev.publicComments],
@@ -81,11 +86,11 @@ export default function ArticleSidebar({
             personalNotes: [newItem, ...prev.personalNotes],
           }));
         }
-        setContent('');
+        setContent("");
       }
     } catch (err) {
       console.log(err);
-      console.error('Failed to post');
+      console.error("Failed to post");
     } finally {
       setIsSubmitting(false);
     }
@@ -98,14 +103,14 @@ export default function ArticleSidebar({
       <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
         <div className="flex bg-black p-1 rounded-xl">
           <button
-            onClick={() => setTab('halaqa')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-tighter transition-all ${tab === 'halaqa' ? 'bg-zinc-800 text-amber-500' : 'text-zinc-500'}`}
+            onClick={() => setTab("halaqa")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-tighter transition-all ${tab === "halaqa" ? "bg-zinc-800 text-amber-500" : "text-zinc-500"}`}
           >
             <MessageSquare size={14} /> Halaqa
           </button>
           <button
-            onClick={() => setTab('notebook')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-tighter transition-all ${tab === 'notebook' ? 'bg-zinc-800 text-amber-500' : 'text-zinc-500'}`}
+            onClick={() => setTab("notebook")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-tighter transition-all ${tab === "notebook" ? "bg-zinc-800 text-amber-500" : "text-zinc-500"}`}
           >
             <BookOpen size={14} /> Notebook
           </button>
@@ -128,7 +133,7 @@ export default function ArticleSidebar({
           </div>
         )}
 
-        {tab === 'halaqa' ? (
+        {tab === "halaqa" ? (
           <HalaqaFeed
             publicComments={data.publicComments}
             sentenceIndex={sentenceIndex}
@@ -138,6 +143,7 @@ export default function ArticleSidebar({
             personalNotes={data.personalNotes}
             sentenceIndex={sentenceIndex}
             onUpdate={handleNoteUpdate}
+            onDelete={handleNoteDelete}
           />
         )}
       </div>
@@ -147,9 +153,9 @@ export default function ArticleSidebar({
         <div className="relative">
           <textarea
             placeholder={
-              tab === 'halaqa'
-                ? 'Join the discussion...'
-                : 'Write a private note...'
+              tab === "halaqa"
+                ? "Join the discussion..."
+                : "Write a private note..."
             }
             className="w-full bg-black border border-zinc-800 rounded-2xl p-4 pr-12 text-sm text-white placeholder:text-zinc-700 focus:border-amber-500 outline-none resize-none"
             rows={3}
@@ -210,14 +216,37 @@ function NotebookView({
   personalNotes,
   sentenceIndex,
   onUpdate,
+  onDelete,
 }: {
   personalNotes: Note[];
   sentenceIndex: number | null;
   onUpdate: (noteId: string, newContent: string) => void;
+  onDelete: (noteId: string) => void;
 }) {
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editText, setEditText] = useState('');
+  const [editText, setEditText] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
 
+  const handleDelete = async (id: string) => {
+    if (
+      !confirm("Are you sure you want to remove this note from your notebook?")
+    )
+      return;
+
+    setIsDeleting(true);
+    const res = await fetch(`/api/articles/${slug}/interaction`, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ noteId: id }),
+    });
+
+    if (res.ok) {
+      onDelete(id);
+    } else {
+      setIsDeleting(false);
+      alert("Failed to delete");
+    }
+  };
   const handleStartEdit = (note: Note) => {
     setEditingId(note._id);
     setEditText(note.content);
@@ -226,7 +255,7 @@ function NotebookView({
   const handleSave = async () => {
     // Call the API
     const res = await fetch(`/api/articles/${slug}/interaction`, {
-      method: 'PATCH',
+      method: "PATCH",
       body: JSON.stringify({ id: editingId, content: editText }),
     });
 
@@ -287,6 +316,14 @@ function NotebookView({
                     className="text-[10px] font-bold text-amber-500/60 hover:text-amber-500 uppercase tracking-widest"
                   >
                     Edit
+                  </button>
+
+                  <button
+                    onClick={() => handleDelete(note._id)}
+                    disabled={isDeleting}
+                    className="text-[10px] font-bold text-red-500/40 hover:text-red-500 uppercase tracking-widest ml-4"
+                  >
+                    {isDeleting ? "Removing..." : "Delete"}
                   </button>
                 </div>
               </>

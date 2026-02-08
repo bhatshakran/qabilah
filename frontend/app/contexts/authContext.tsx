@@ -1,11 +1,11 @@
-'use client';
+"use client";
 import {
   createContext,
   useContext,
   useEffect,
   useState,
   ReactNode,
-} from 'react';
+} from "react";
 
 interface User {
   name: string;
@@ -28,9 +28,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const refreshUser = async () => {
     try {
-      const res = await fetch('/api/auth/me');
+      const res = await fetch("/api/auth/me");
       const data = await res.json();
-      console.log(data, 'data');
       if (data.user) {
         setUser(data.user);
       } else {
@@ -50,7 +49,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = (userData: User) => setUser(userData);
 
   const logout = async () => {
-    await fetch('/api/auth/logout', { method: 'POST' });
+    await fetch("/api/auth/logout", { method: "POST" });
     setUser(null);
   };
 
@@ -63,6 +62,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 };
