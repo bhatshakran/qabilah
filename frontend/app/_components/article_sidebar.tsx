@@ -11,15 +11,16 @@ interface SidebarProps {
   sentenceIndex: number | null;
   tab: "halaqa" | "notebook";
   setTab: (s: "halaqa" | "notebook") => void;
+  slug: string;
 }
 
-const slug = "masjid-al-aqsa-history";
 export default function ArticleSidebar({
   isOpen,
   onClose,
   sentenceIndex,
   tab,
   setTab,
+  slug,
 }: SidebarProps) {
   const { user } = useAuth();
   const [content, setContent] = useState("");
@@ -35,7 +36,7 @@ export default function ArticleSidebar({
         .then((res) => res.json())
         .then((json) => setData(json));
     }
-  }, [isOpen]);
+  }, [isOpen, slug]);
   const handleNoteDelete = (noteId: string) => {
     setData((prev) => ({
       ...prev,
@@ -144,6 +145,7 @@ export default function ArticleSidebar({
             sentenceIndex={sentenceIndex}
             onUpdate={handleNoteUpdate}
             onDelete={handleNoteDelete}
+            slug={slug}
           />
         )}
       </div>
@@ -217,11 +219,13 @@ function NotebookView({
   sentenceIndex,
   onUpdate,
   onDelete,
+  slug,
 }: {
   personalNotes: Note[];
   sentenceIndex: number | null;
   onUpdate: (noteId: string, newContent: string) => void;
   onDelete: (noteId: string) => void;
+  slug: string;
 }) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState("");

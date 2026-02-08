@@ -1,6 +1,4 @@
-import { CurrentWord } from '../flashcard';
-import ConnectingLine from './connecting_line';
-import MapMarker from './map_marker';
+import { CurrentWord } from "../flashcard";
 
 const Map = ({
   setView,
@@ -28,10 +26,10 @@ const Map = ({
           const levelWords = wordsData.filter(
             (w) =>
               w.rank > (level - 1) * wordsPerLevel &&
-              w.rank <= level * wordsPerLevel
+              w.rank <= level * wordsPerLevel,
           );
           const masteredCount = levelWords.filter((w) =>
-            masteredIds.includes(w.rank)
+            masteredIds.includes(w.rank),
           ).length;
           const progress = (masteredCount / wordsPerLevel) * 100;
           const isCompleted = progress === 100;
@@ -43,7 +41,8 @@ const Map = ({
               const prevLevelMax = (level - 1) * wordsPerLevel;
               const prevWords = wordsData.filter(
                 (w) =>
-                  w.rank > (level - 2) * wordsPerLevel && w.rank <= prevLevelMax
+                  w.rank > (level - 2) * wordsPerLevel &&
+                  w.rank <= prevLevelMax,
               );
               return prevWords.some((w) => !masteredIds.includes(w.rank));
             })();
@@ -57,7 +56,7 @@ const Map = ({
 
               {/* Level Label */}
               <span
-                className={`absolute -top-8 text-[9px] font-bold tracking-[0.2em] uppercase transition-colors ${isLocked ? 'text-zinc-800' : 'text-zinc-500'}`}
+                className={`absolute -top-8 text-[9px] font-bold tracking-[0.2em] uppercase transition-colors ${isLocked ? "text-zinc-800" : "text-zinc-500"}`}
               >
                 Lvl {level}
               </span>
@@ -66,11 +65,11 @@ const Map = ({
                 disabled={isLocked}
                 onClick={() => {
                   setSelectedLevel(level);
-                  setView('study');
+                  setView("study");
                 }}
                 className={`
                   relative w-16 h-16 flex items-center justify-center transition-all duration-300
-                  ${isLocked ? 'cursor-not-allowed' : 'cursor-pointer hover:scale-110 active:scale-95'}
+                  ${isLocked ? "cursor-not-allowed" : "cursor-pointer hover:scale-110 active:scale-95"}
                 `}
               >
                 {/* The Square/Diamond Node */}
@@ -79,15 +78,15 @@ const Map = ({
                   w-10 h-10 flex items-center justify-center transition-all duration-500 border rotate-45
                   ${
                     isLocked
-                      ? 'bg-zinc-950 border-zinc-900 text-zinc-900'
+                      ? "bg-zinc-950 border-zinc-900 text-zinc-900"
                       : isCompleted
-                        ? 'bg-white border-white text-black shadow-[0_0_20px_rgba(255,255,255,0.1)]'
-                        : 'bg-zinc-900 border-amber-500 text-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.1)]'
+                        ? "bg-white border-white text-black shadow-[0_0_20px_rgba(255,255,255,0.1)]"
+                        : "bg-zinc-900 border-amber-500 text-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.1)]"
                   }
                 `}
                 >
                   <span className="text-xs font-black -rotate-45">
-                    {isCompleted ? '✓' : level}
+                    {isCompleted ? "✓" : level}
                   </span>
                 </div>
               </button>

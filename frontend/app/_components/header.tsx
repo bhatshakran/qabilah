@@ -11,7 +11,7 @@ const Header = () => {
   const { streak } = useStreak();
   const [showSignin, setShowSignin] = useState(false);
   return (
-    <div className="w-full flex items-center justify-between mb-10 pt-4 max-w-2xl mx-auto">
+    <div className="w-full flex items-center justify-between flex-wrap mb-10 pt-4 mx-auto px-4">
       <Link href={"/"} className="flex items-center gap-3">
         {/* Logo: Geometric Crescent */}
         <div className="relative w-10 h-10 flex items-center justify-center cursor-pointer">
@@ -34,76 +34,74 @@ const Header = () => {
       </Link>
 
       {/* Streak Counter */}
-      <div
-        className={`flex items-center gap-2 px-4 py-2 rounded-2xl border transition-all ${streak > 0 ? "bg-orange-500/10 border-orange-500/30" : "bg-zinc-900 border-zinc-800"}`}
-      >
-        <span
-          className={`text-xl ${streak > 0 ? "animate-bounce" : "grayscale"}`}
+      <div className="flex items-center">
+        <div
+          className={`flex items-center gap-2 px-4 py-2 rounded-2xl border transition-all ${streak > 0 ? "bg-orange-500/10 border-orange-500/30" : "bg-zinc-900 border-zinc-800"}`}
         >
-          🔥
-        </span>
-        <div className="flex flex-col">
-          <span className="text-[10px] text-zinc-500 font-bold uppercase leading-none">
-            Streak
-          </span>
-          <span
-            className={`text-sm font-black ${streak > 0 ? "text-orange-500" : "text-zinc-400"}`}
-          >
-            {streak} {streak === 1 ? "Day" : "Days"}
-          </span>
-        </div>
-      </div>
-
-      <div className="flex items-center gap-6">
-        {loading ? (
-          <div className="w-4 h-4 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
-        ) : user ? (
-          <div className="flex items-center gap-4">
-            <span className="text-xs font-black tracking-widest text-zinc-500 uppercase">
-              {user.name}
+          <span className={`text-xl ${streak > 0 ? "" : "grayscale"}`}>🔥</span>
+          <div className="flex flex-col">
+            <span className="text-[10px] text-zinc-500 font-bold uppercase leading-none">
+              Streak
             </span>
-            <button
-              onClick={logout}
-              className="text-[10px] font-bold text-amber-500/60 hover:text-amber-500 uppercase tracking-widest transition-colors"
+            <span
+              className={`text-sm font-black ${streak > 0 ? "text-orange-500" : "text-zinc-400"}`}
             >
-              Exit
-            </button>
+              {streak} {streak === 1 ? "Day" : "Days"}
+            </span>
           </div>
-        ) : (
-          <div
-            className="px-4 py-2 text-sm font-medium hover:text-amber-600 transition-colors cursor-pointer"
-            onClick={() => setShowSignin(true)}
-          >
-            Sign In
-          </div>
-        )}
-      </div>
+        </div>
 
-      {showSignin &&
-        !user &&
-        createPortal(
-          <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
-            {/* 1. Dark Backdrop Overlay */}
-            <div
-              className="absolute inset-0 bg-zinc-950/60 backdrop-blur-sm transition-opacity"
-              onClick={() => setShowSignin(false)} // Close when clicking outside
-            />
-
-            {/* 2. The Form Container */}
-            <div className="relative w-full max-w-md animate-in fade-in zoom-in duration-200">
-              {/* Close Button (Optional but recommended) */}
+        <div className="flex items-center gap-6">
+          {loading ? (
+            <div className="w-4 h-4 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
+          ) : user ? (
+            <div className="flex items-center gap-4">
+              <span className="text-xs font-black tracking-widest text-zinc-500 uppercase">
+                {user.name}
+              </span>
               <button
-                onClick={() => setShowSignin(false)}
-                className="absolute -top-12 right-0 text-white/70 hover:text-white flex items-center gap-1 text-sm font-medium"
+                onClick={logout}
+                className="text-[10px] font-bold text-amber-500/60 hover:text-amber-500 uppercase tracking-widest transition-colors"
               >
-                Close <span className="text-xl">×</span>
+                Logout
               </button>
-
-              <SignInForm />
             </div>
-          </div>,
-          document.body,
-        )}
+          ) : (
+            <div
+              className="px-4 py-2 text-sm font-medium hover:text-amber-600 transition-colors cursor-pointer"
+              onClick={() => setShowSignin(true)}
+            >
+              Sign In
+            </div>
+          )}
+        </div>
+
+        {showSignin &&
+          !user &&
+          createPortal(
+            <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
+              {/* 1. Dark Backdrop Overlay */}
+              <div
+                className="absolute inset-0 bg-zinc-950/60 backdrop-blur-sm transition-opacity"
+                onClick={() => setShowSignin(false)} // Close when clicking outside
+              />
+
+              {/* 2. The Form Container */}
+              <div className="relative w-full max-w-md animate-in fade-in zoom-in duration-200">
+                {/* Close Button (Optional but recommended) */}
+                <button
+                  onClick={() => setShowSignin(false)}
+                  className="absolute -top-12 right-0 text-white/70 hover:text-white flex items-center gap-1 text-sm font-medium"
+                >
+                  Close <span className="text-xl">×</span>
+                </button>
+
+                <SignInForm />
+              </div>
+            </div>,
+            document.body,
+          )}
+      </div>
     </div>
   );
 };

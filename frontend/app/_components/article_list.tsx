@@ -1,5 +1,5 @@
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import Link from "next/link";
+import { useEffect, useState } from "react";
 // Mock Data (Replace with your real imports later)
 export interface Token {
   surface: string;
@@ -29,6 +29,7 @@ export interface Article {
   paragraphs: Paragraph[];
   level: string;
   category: string;
+  slug: string;
 }
 
 /**
@@ -39,7 +40,7 @@ export interface ArticleMeta {
   id: string;
   title: string; // Matches 'headline' in the reader
   subtitle: string; // English translation of headline
-  level: 'Beginner' | 'Intermediate' | 'Advanced';
+  level: "Beginner" | "Intermediate" | "Advanced";
   category: string;
   progress: number; // 0 to 100
 }
@@ -47,9 +48,10 @@ export interface ArticleMeta {
 const ArticleList = () => {
   const [articles, setArticles] = useState<Article[]>([]);
 
+  console.log(articles, "articles");
   useEffect(() => {
     async function loadArticles() {
-      const response = await fetch('/content/index.json');
+      const response = await fetch("/content/index.json");
       const data = await response.json();
       setArticles(data);
     }
@@ -60,7 +62,7 @@ const ArticleList = () => {
     <div className="space-y-4 h-[65vh] overflow-y-auto pr-2 scrollbar-hide pb-20">
       {articles.map((article) => (
         <Link
-          href={`/read/${article.id}`}
+          href={`/read/${article.slug}`}
           key={article.id}
           className="group block relative bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden hover:border-amber-500/50 transition-all active:scale-[0.98]"
         >
@@ -80,9 +82,9 @@ const ArticleList = () => {
               <div className="flex gap-2 mb-2">
                 <span
                   className={`text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded text-black ${
-                    article.level === 'Beginner'
-                      ? 'bg-emerald-400'
-                      : 'bg-amber-400'
+                    article.level === "Beginner"
+                      ? "bg-emerald-400"
+                      : "bg-amber-400"
                   }`}
                 >
                   {article.level}

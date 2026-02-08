@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { CurrentWord } from '../flashcard';
-import ArticleList from './article_list';
+import { useState } from "react";
+import { CurrentWord } from "../flashcard";
+import ArticleList from "./article_list";
 
 const VocabLibrary = ({
   wordsData,
@@ -32,7 +32,7 @@ const VocabLibrary = ({
           .filter(
             (w) =>
               w.arabic.includes(searchQuery) ||
-              w.english.toLowerCase().includes(searchQuery.toLowerCase())
+              w.english.toLowerCase().includes(searchQuery.toLowerCase()),
           )
           .map((word) => {
             const isMastered = masteredIds.includes(word.rank);
@@ -41,8 +41,8 @@ const VocabLibrary = ({
                 key={word.rank}
                 className={`p-4 rounded-2xl border flex items-center justify-between transition-all ${
                   isMastered
-                    ? 'bg-amber-500/5 border-amber-500/20'
-                    : 'bg-zinc-900 border-zinc-800'
+                    ? "bg-amber-500/5 border-amber-500/20"
+                    : "bg-zinc-900 border-zinc-800"
                 }`}
               >
                 <div className="flex flex-col">
@@ -77,7 +77,7 @@ const VocabLibrary = ({
   );
 };
 
-const Library = ({
+const LibraryView = ({
   searchQuery,
   setSearchQuery,
   wordsData,
@@ -89,7 +89,7 @@ const Library = ({
   wordsData: CurrentWord[];
   masteredIds: number[];
 }) => {
-  const [activeTab, setActiveTab] = useState<'vocab' | 'articles'>('articles');
+  const [activeTab, setActiveTab] = useState<"vocab" | "articles">("articles");
 
   return (
     <div className="w-full max-w-2xl animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -101,24 +101,24 @@ const Library = ({
       {/* TABS TOGGLE */}
       <div className="bg-zinc-900 p-1 rounded-xl flex mb-6 border border-zinc-800">
         <button
-          onClick={() => setActiveTab('articles')}
+          onClick={() => setActiveTab("articles")}
           className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
-            activeTab === 'articles'
-              ? 'bg-zinc-800 text-white shadow-sm'
-              : 'text-zinc-500 hover:text-zinc-300'
+            activeTab === "articles"
+              ? "bg-zinc-800 text-white shadow-sm"
+              : "text-zinc-500 hover:text-zinc-300"
           }`}
         >
           Texts & Articles
         </button>
         <button
-          onClick={() => setActiveTab('vocab')}
+          onClick={() => setActiveTab("vocab")}
           className={`flex-1 py-2 rounded-lg text-sm font-bold transition-all ${
-            activeTab === 'vocab'
-              ? 'bg-zinc-800 text-white shadow-sm'
-              : 'text-zinc-500 hover:text-zinc-300'
+            activeTab === "vocab"
+              ? "bg-zinc-800 text-white shadow-sm"
+              : "text-zinc-500 hover:text-zinc-300"
           }`}
         >
-          Vocabulary{' '}
+          Vocabulary{" "}
           <span className="text-[10px] opacity-60 ml-1">
             ({wordsData.length})
           </span>
@@ -126,7 +126,7 @@ const Library = ({
       </div>
 
       {/* CONTENT AREA */}
-      {activeTab === 'articles' ? (
+      {activeTab === "articles" ? (
         <ArticleList />
       ) : (
         <VocabLibrary
@@ -140,4 +140,4 @@ const Library = ({
   );
 };
 
-export default Library;
+export default LibraryView;

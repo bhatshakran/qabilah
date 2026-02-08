@@ -69,7 +69,7 @@ export default function Reader({ article }: { article: Article }) {
 
   return (
     <div
-      className={`w-full max-w-2xl relative mx-auto mt-6 space-y-10 pb-40 px-4 transition-colors duration-500 ${themeClasses[settings.theme]}`}
+      className={`w-full max-w-4xl relative mx-auto mt-6 space-y-10 pb-40 px-4 transition-colors duration-500 ${themeClasses[settings.theme]}`}
     >
       <ArticleSidebar
         sentenceIndex={activeBlock}
@@ -78,6 +78,7 @@ export default function Reader({ article }: { article: Article }) {
           setSidebarOpen(false);
         }}
         tab={tab}
+        slug={article.slug}
         setTab={setTab}
       />
       {popoverData &&

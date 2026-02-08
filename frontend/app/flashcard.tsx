@@ -5,7 +5,7 @@ import FrontSide from "./_components/frontside";
 import Backside from "./_components/backside";
 import ProgressBar from "./_components/progress_bar";
 import Result from "./_components/result";
-import Library from "./_components/library";
+import LibraryView from "./_components/library_view";
 import Map from "./_components/map";
 import { useStreak } from "./contexts/streakContext";
 export interface CurrentWord {
@@ -29,7 +29,7 @@ export default function FlashcardApp() {
   const [queue, setQueue] = useState<typeof wordsData>([]);
   const [isLoaded, setIsLoaded] = useState(false);
   const currentWord = queue[0];
-  const [view, setView] = useState("map"); // 'study' or 'library'
+  const [view, setView] = useState("View"); // 'map' or 'View'
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLevel, setSelectedLevel] = useState(1);
   const [isReviewMode, setIsReviewMode] = useState(false);
@@ -166,8 +166,8 @@ export default function FlashcardApp() {
           wordsData={wordsData}
           wordsPerLevel={wordsPerLevel}
         />
-      ) : view == "library" ? (
-        <Library
+      ) : view == "View" ? (
+        <LibraryView
           masteredIds={masteredIds}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
