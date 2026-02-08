@@ -1,19 +1,19 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import SettingsPane, { ReaderSettings } from './settings_pane';
-import { Article, Sentence, Token } from './article_list';
-import WordPopover from './word_popover';
-import { createPortal } from 'react-dom';
-import { BookOpen, MessageSquare } from 'lucide-react';
-import ArticleSidebar from './article_sidebar';
+import { useEffect, useState } from "react";
+import SettingsPane, { ReaderSettings } from "./settings_pane";
+import { Article, Sentence, Token } from "./article_list";
+import WordPopover from "./word_popover";
+import { createPortal } from "react-dom";
+import { BookOpen, MessageSquare } from "lucide-react";
+import ArticleSidebar from "./article_sidebar";
 
 export default function Reader({ article }: { article: Article }) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [selectedTokenKey, setSelectedTokenKey] = useState<string | null>(null);
   const [activeBlock, setActiveBlock] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [tab, setTab] = useState<'notebook' | 'halaqa'>('notebook');
+  const [tab, setTab] = useState<"notebook" | "halaqa">("notebook");
   const [popoverData, setPopoverData] = useState<{
     word: string;
     pos: { top: number; left: number };
@@ -21,8 +21,8 @@ export default function Reader({ article }: { article: Article }) {
 
   const [settings, setSettings] = useState<ReaderSettings>({
     fontSize: 24,
-    fontFamily: 'amiri',
-    theme: 'dark',
+    fontFamily: "amiri",
+    theme: "dark",
     showEnglish: true,
   });
 
@@ -31,15 +31,15 @@ export default function Reader({ article }: { article: Article }) {
   };
 
   const themeClasses = {
-    dark: 'bg-zinc-950 text-zinc-100',
-    light: 'bg-zinc-50 text-zinc-900',
-    sepia: 'bg-[#f4ecd8] text-[#5b4636]',
+    dark: "bg-zinc-950 text-zinc-100",
+    light: "bg-zinc-50 text-zinc-900",
+    sepia: "bg-[#f4ecd8] text-[#5b4636]",
   };
 
   const handleTokenClick = (
     e: React.MouseEvent,
     token: Token,
-    sentence: Sentence
+    sentence: Sentence,
   ) => {
     const rect = e.currentTarget.getBoundingClientRect(); // Target the span specifically
 
@@ -55,7 +55,7 @@ export default function Reader({ article }: { article: Article }) {
     setSelectedTokenKey((prev) =>
       prev == `${sentence.id}-${token.index}`
         ? null
-        : `${sentence.id}-${token.index}`
+        : `${sentence.id}-${token.index}`,
     );
   };
   useEffect(() => {
@@ -63,8 +63,8 @@ export default function Reader({ article }: { article: Article }) {
       if (popoverData) setPopoverData(null);
     };
 
-    window.addEventListener('scroll', handleScroll, true); // Use capture phase
-    return () => window.removeEventListener('scroll', handleScroll, true);
+    window.addEventListener("scroll", handleScroll, true); // Use capture phase
+    return () => window.removeEventListener("scroll", handleScroll, true);
   }, [popoverData]);
 
   return (
@@ -89,9 +89,9 @@ export default function Reader({ article }: { article: Article }) {
               setPopoverData(null);
               setSelectedTokenKey(null);
             }}
-            onSave={(w) => console.log('Saving word:', w)}
+            onSave={(w) => console.log("Saving word:", w)}
           />,
-          document.body
+          document.body,
         )}
       <SettingsPane
         isOpen={isSettingsOpen}
@@ -135,8 +135,8 @@ export default function Reader({ article }: { article: Article }) {
                 key={s.id}
                 className={`transition-opacity duration-300 ${
                   selectedTokenKey && !selectedTokenKey.startsWith(s.id)
-                    ? 'opacity-40'
-                    : 'opacity-100'
+                    ? "opacity-40"
+                    : "opacity-100"
                 }`}
               >
                 {/* Sidebar Indicators */}
@@ -145,7 +145,7 @@ export default function Reader({ article }: { article: Article }) {
                     onClick={() => {
                       setActiveBlock(s.sentenceIndex);
                       setSidebarOpen(true);
-                      setTab('halaqa');
+                      setTab("halaqa");
                     }}
                     className="p-1 hover:text-amber-500 text-zinc-700 transition-colors"
                   >
@@ -155,7 +155,7 @@ export default function Reader({ article }: { article: Article }) {
                     onClick={() => {
                       setActiveBlock(s.sentenceIndex);
                       setSidebarOpen(true);
-                      setTab('notebook');
+                      setTab("notebook");
                     }}
                     className="p-1 hover:text-amber-500 text-zinc-700 transition-colors"
                   >
@@ -176,8 +176,8 @@ export default function Reader({ article }: { article: Article }) {
                         }}
                         className={`cursor-pointer rounded transition-all ${
                           selectedTokenKey === `${s.id}-${t.index}`
-                            ? 'bg-emerald-500/30 text-emerald-400 ring-1 ring-emerald-500/50'
-                            : 'hover:text-emerald-400'
+                            ? "bg-emerald-500/30 text-emerald-400 ring-1 ring-emerald-500/50"
+                            : "hover:text-emerald-400"
                         }`}
                       >
                         {t.surface}

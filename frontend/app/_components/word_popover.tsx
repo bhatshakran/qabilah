@@ -1,6 +1,7 @@
-'use client';
-import { motion, AnimatePresence } from 'framer-motion';
-import { BookmarkPlus, Volume2, X } from 'lucide-react';
+"use client";
+import { motion, AnimatePresence } from "framer-motion";
+import { BookmarkPlus, Loader2, Volume2, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 
 interface WordPopoverProps {
   word: string;
@@ -15,6 +16,42 @@ export default function WordPopover({
   onClose,
   onSave,
 }: WordPopoverProps) {
+  const [translation, setTranslation] = useState("Translation Placeholder");
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!word) return;
+
+    let isMounted = true; // Prevents state updates on unmounted components
+
+    const translate = async () => {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/ai/translation", {
+          method: "POST",
+          body: JSON.stringify({ text: word }),
+        });
+        const data = await res.json();
+
+        if (isMounted) {
+          setTranslation(data.translation);
+          setLoading(false);
+        }
+      } catch {
+        if (isMounted) {
+          setTranslation("Could not translate");
+          setLoading(false);
+        }
+      }
+    };
+
+    translate();
+
+    return () => {
+      isMounted = false;
+    }; // Cleanup function
+  }, [word]);
+
   if (!position) return null;
 
   return (
@@ -24,10 +61,10 @@ export default function WordPopover({
         animate={{ opacity: 1, y: 0, scale: 1 }}
         exit={{ opacity: 0, y: 10, scale: 0.95 }}
         style={{
-          position: 'fixed', // Key change
+          position: "fixed", // Key change
           top: position.top - 12, // Gap between word and popover
           left: position.left,
-          transform: 'translate(-50%, -100%)', // Lift it up and center it
+          transform: "translate(-50%, -100%)", // Lift it up and center it
         }}
         className="z-50 min-w-[180px] bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-xl rounded-2xl p-4 flex flex-col gap-3"
       >
@@ -50,7 +87,7 @@ export default function WordPopover({
             Meaning
           </p>
           <p className="text-lg text-zinc-800 dark:text-zinc-200">
-            [Translation Placeholder]
+            {loading ? <Loader2 className="animate-spin" /> : translation}
           </p>
         </div>
 
