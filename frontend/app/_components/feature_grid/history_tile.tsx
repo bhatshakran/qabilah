@@ -1,6 +1,6 @@
 const HistoryTile = () => {
   return (
-    <div className="relative bg-zinc-900 border border-zinc-800 rounded-3xl p-8 h-auto group flex flex-col overflow-hidden justify-between">
+    <div className="col-span-2 lg:col-span-1 relative bg-zinc-900 border border-zinc-800 rounded-3xl p-8 h-auto group flex flex-col overflow-hidden justify-between">
       {/* Soft Emerald Wash */}
       <div className="absolute -top-32 -left-32 w-[340px] h-[340px] bg-emerald-700/10 blur-[140px] rounded-full" />
 

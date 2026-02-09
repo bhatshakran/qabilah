@@ -17,7 +17,7 @@ export default function FlashcardApp() {
   const [queue, setQueue] = useState<VocabularyType[]>([]);
   const [wordsData, setWordsData] = useState<VocabularyType[]>([]); // New state for DB data
   const [isLoaded, setIsLoaded] = useState(false);
-  const [view, setView] = useState("View");
+  const [view, setView] = useState("library");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLevel, setSelectedLevel] = useState(1);
   const [isReviewMode, setIsReviewMode] = useState(false);

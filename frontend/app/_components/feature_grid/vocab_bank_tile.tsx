@@ -1,11 +1,11 @@
 const VocabBankTile = () => {
   return (
-    <div className="md:col-span-2 relative bg-zinc-900 rounded-3xl p-8 border border-zinc-800 overflow-hidden group">
+    <div className="col-span-2 relative bg-zinc-900 rounded-3xl p-8 border border-zinc-800 overflow-hidden group min-h-[300px]">
       {/* Soft neutral glow */}
-      <div className="absolute -top-24 -right-24 w-[260px] h-[260px] bg-white/5 blur-[120px]" />
+      <div className="absolute -top-24 -right-24 w-[260px] h-[260px] bg-white/5 blur-[120px] pointer-events-none" />
 
       {/* Header */}
-      <div className="relative z-10 flex justify-between items-center mb-8">
+      <div className="relative z-10 flex justify-between items-center mb-8 flex-wrap gap-4">
         <div>
           <h3 className="text-3xl font-bold tracking-tight">Your Word Bank</h3>
           <p className="text-zinc-500 text-sm mt-1">
@@ -19,7 +19,8 @@ const VocabBankTile = () => {
       </div>
 
       {/* Words */}
-      <div className="relative z-10 flex flex-wrap gap-3 max-w-[90%]">
+      {/* Changed: max-w-full to prevent cropping */}
+      <div className="relative z-10 flex flex-wrap gap-3 max-w-full md:max-w-[90%] pb-8 md:pb-0">
         {["العلم", "السلام", "المستقبل", "التاريخ", "الثقافة", "المعرفة"].map(
           (word, i) => (
             <span

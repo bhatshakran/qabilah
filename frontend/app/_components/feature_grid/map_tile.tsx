@@ -1,8 +1,9 @@
 const MapTile = () => {
   return (
-    <div className="relative bg-zinc-900 border border-zinc-800 rounded-3xl p-8 overflow-hidden flex flex-col gap-8">
+    <div className="col-span-2 md:col-span-1 relative bg-zinc-900 border border-zinc-800 rounded-3xl p-8 overflow-hidden flex flex-col gap-8 min-h-[300px]">
       {/* Header */}
-      <div className="max-w-[60%]">
+      {/* Changed: max-w-full on mobile */}
+      <div className="max-w-full md:max-w-[60%]">
         <h3 className="text-3xl font-bold mb-2 tracking-tight">The Map</h3>
         <p className="text-zinc-400 text-sm leading-relaxed">
           A spatial curriculum that unlocks as you master words.
@@ -10,12 +11,12 @@ const MapTile = () => {
       </div>
 
       {/* Framed Map Preview */}
-      <div className="relative bg-zinc-850 border border-zinc-800 rounded-2xl p-6 shadow-lg">
+      <div className="relative bg-zinc-850 border border-zinc-800 rounded-2xl p-6 shadow-lg overflow-x-auto">
         {/* Soft vignette */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent rounded-2xl" />
+        <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/35 via-transparent to-transparent rounded-2xl" />
 
-        {/* Mini Grid */}
-        <div className="grid grid-cols-5 gap-y-10 gap-x-4 pb-6">
+        {/* Mini Grid - Added min-w to prevent crushing on very small screens */}
+        <div className="grid grid-cols-5 gap-y-10 gap-x-4 pb-6 min-w-[200px]">
           {Array.from({ length: 12 }).map((_, i) => {
             const state =
               i === 0 || i === 1

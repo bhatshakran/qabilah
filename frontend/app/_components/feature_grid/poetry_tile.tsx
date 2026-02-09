@@ -1,6 +1,6 @@
 const PoetryTile = () => {
   return (
-    <div className="md:col-span-2 relative bg-zinc-950 border border-zinc-800 rounded-3xl p-8 overflow-hidden group">
+    <div className="col-span-2 relative bg-zinc-950 border border-zinc-800 rounded-3xl p-8 overflow-hidden group">
       <div className="absolute -bottom-24 -right-24 w-[400px] h-[400px] bg-blue-600/10 blur-[120px] rounded-full" />
 
       <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center h-full">
@@ -27,10 +27,10 @@ const PoetryTile = () => {
             </div>
 
             <div className="flex flex-col gap-4 mt-2" dir="rtl">
-              <p className="text-2xl lg:text-3xl font-amiri text-zinc-100 leading-snug border-r-2 border-blue-500/30 pr-4">
+              <p className="text-2xl xl:text-3xl font-amiri text-zinc-100 leading-snug border-r-2 border-blue-500/30 pr-4">
                 الخَيْلُ وَاللّيْلُ وَالبَيْداءُ تَعرِفُني
               </p>
-              <p className="text-2xl lg:text-3xl font-amiri text-blue-400/90 leading-snug mr-8">
+              <p className="text-2xl xl:text-3xl font-amiri text-blue-400/90 leading-snug mr-8">
                 وَالسّيفُ وَالرّمحُ وَالقِرْطاسُ وَالقَلَمُ
               </p>
               <div className="pt-4 border-t border-zinc-800/50" dir="ltr">

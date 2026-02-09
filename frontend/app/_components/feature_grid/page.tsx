@@ -5,11 +5,13 @@ import VocabBankTile from "./vocab_bank_tile";
 
 const FeatureGrid = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[300px]">
+    // Changed: auto-rows-auto for mobile so content fits, fixed 300px for desktop
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 auto-rows-auto md:auto-rows-[300px]">
       {/* 1. Translation Popover Snapshot */}
-      <div className="md:col-span-2 bg-zinc-900 rounded-3xl p-8 border border-zinc-800 overflow-hidden relative group">
+      <div className="col-span-2 bg-zinc-900 rounded-3xl p-8 border border-zinc-800 overflow-hidden relative group flex flex-col md:block">
         {/* Copy */}
-        <div className="max-w-[60%] relative z-10">
+        {/* Changed: max-w-full on mobile, 60% on desktop */}
+        <div className="max-w-full md:max-w-[60%] relative z-10 mb-8 md:mb-0">
           <h3 className="text-3xl font-bold mb-3 tracking-tight">
             Smart Popover
           </h3>
@@ -20,13 +22,14 @@ const FeatureGrid = () => {
         </div>
 
         {/* Floating Popover Mock */}
-        <div className="absolute right-6 bottom-6 translate-y-6 rotate-[-6deg] group-hover:rotate-0 group-hover:translate-y-0 transition-all duration-500 ease-out">
-          <div className="relative bg-white/95 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-2xl rounded-2xl p-5 w-[260px] backdrop-blur">
+        {/* Changed: Relative on mobile (stacked), Absolute on desktop */}
+        <div className="relative md:absolute md:right-6 md:bottom-6 md:translate-y-6 md:rotate-[-6deg] md:group-hover:rotate-0 md:group-hover:translate-y-0 transition-all duration-500 ease-out self-end md:self-auto">
+          <div className="relative bg-white/95 dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 shadow-2xl rounded-2xl p-5 w-full md:w-[260px] backdrop-blur">
             {/* Header */}
             <div className="flex justify-between items-start mb-3">
               <div>
                 <p className="text-2xl font-bold text-emerald-500 font-arabic">
-                  يَتَمَيَّزُ
+                  يَتَمَيَّزُ
                 </p>
                 <p className="text-[10px] uppercase tracking-widest text-zinc-400">
                   Verb • Root م – ي – ز
@@ -59,13 +62,13 @@ const FeatureGrid = () => {
         </div>
 
         {/* Glow Accent */}
-        <div className="absolute right-0 bottom-0 w-[300px] h-[300px] bg-emerald-500/10 blur-[120px] rounded-full" />
+        <div className="absolute right-0 bottom-0 w-[300px] h-[300px] bg-emerald-500/10 blur-[120px] rounded-full pointer-events-none" />
       </div>
 
       {/* 2. Audio/Voice Snapshot */}
-      <div className="relative bg-zinc-950 border border-zinc-800 rounded-3xl p-8 flex flex-col justify-between overflow-hidden group">
+      <div className="relative bg-zinc-950 border border-zinc-800 rounded-3xl p-8 flex flex-col justify-between overflow-hidden group min-h-[300px]">
         {/* Glow */}
-        <div className="absolute -top-24 -right-24 w-[300px] h-[300px] bg-amber-500/20 blur-[120px] rounded-full" />
+        <div className="absolute -top-24 -right-24 w-[300px] h-[300px] bg-amber-500/20 blur-[120px] rounded-full pointer-events-none" />
 
         {/* Header */}
         <h3 className="relative z-10 text-3xl font-bold leading-tight">
@@ -92,7 +95,7 @@ const FeatureGrid = () => {
             dir="rtl"
             className="text-5xl font-bold font-amiri text-white drop-shadow-[0_4px_10px_rgba(0,0,0,0.6)] mb-2"
           >
-            يَتَمَيَّزُ
+            يَتَمَيَّزُ
           </h1>
 
           {/* Transliteration */}
@@ -107,7 +110,7 @@ const FeatureGrid = () => {
         </div>
 
         {/* Ambient grid */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.04)_1px,transparent_0)] bg-size-[24px_24px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(255,255,255,0.04)_1px,transparent_0)] bg-size-[24px_24px] pointer-events-none" />
       </div>
 
       {/* 3. Interactive Map Snapshot */}
