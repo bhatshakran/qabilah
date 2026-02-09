@@ -4,6 +4,7 @@ import Hero from "./hero";
 import Article from "@/app/models/article";
 import connectToDatabase from "@/app/lib/connection";
 import Footer from "./footer";
+import Header from "../header";
 
 const LandingPage = async () => {
   await connectToDatabase();
@@ -15,6 +16,7 @@ const LandingPage = async () => {
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-amber-500/30">
+      <Header />
       {/* 1. The Hook */}
       <Hero />
 

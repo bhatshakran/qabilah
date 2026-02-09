@@ -1,6 +1,5 @@
 "use client";
-import { useState, useEffect, useEffectEvent } from "react";
-import wordsData from "../public/words_seed.json";
+import { useState, useEffect, useEffectEvent, useCallback } from "react";
 import FrontSide from "./_components/frontside";
 import Backside from "./_components/backside";
 import ProgressBar from "./_components/progress_bar";
@@ -8,32 +7,25 @@ import Result from "./_components/result";
 import LibraryView from "./_components/library_view";
 import Map from "./_components/map";
 import { useStreak } from "./contexts/streakContext";
-export interface CurrentWord {
-  rank: number;
-  arabic: string;
-  english: string;
-  transliteration: string;
-  type: string;
-  level: string;
-  examples: {
-    ar: string;
-    en: string;
-  }[];
-}
+import { VocabularyType } from "./models/vocabulary";
 
 export default function FlashcardApp() {
   const [isFlipped, setIsFlipped] = useState(false);
   const streakCtx = useStreak();
   const [masteredIds, setMasteredIds] = useState<number[]>([]);
-  const masteredCount = masteredIds.length;
-  const [queue, setQueue] = useState<typeof wordsData>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [queue, setQueue] = useState<VocabularyType[]>([]);
+  const [wordsData, setWordsData] = useState<VocabularyType[]>([]); // New state for DB data
   const [isLoaded, setIsLoaded] = useState(false);
-  const currentWord = queue[0];
-  const [view, setView] = useState("View"); // 'map' or 'View'
+  const [view, setView] = useState("View");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLevel, setSelectedLevel] = useState(1);
   const [isReviewMode, setIsReviewMode] = useState(false);
+
   const wordsPerLevel = 10;
+  const currentWord = queue[0];
+
+  // --- Derived State  ---
   const totalLevels = Math.ceil(wordsData.length / wordsPerLevel);
   const levelWords = wordsData.filter(
     (w) =>
@@ -41,39 +33,34 @@ export default function FlashcardApp() {
       w.rank <= selectedLevel * wordsPerLevel,
   );
 
+  const masteredCount = masteredIds.length;
   const masteredInLevel = levelWords.filter((w) =>
     masteredIds.includes(w.rank),
   ).length;
-  const isLevelComplete = masteredInLevel === levelWords.length;
+  const isLevelComplete =
+    levelWords.length > 0 && masteredInLevel === levelWords.length;
 
-  const setInitialState = useEffectEvent(() => {
-    setIsLoaded(false); // Ensure we hide the UI while calculating
-
+  // --- Core Logic ---
+  const setInitialState = useEffectEvent((fetchedWords: VocabularyType[]) => {
     const savedMastered = JSON.parse(
       localStorage.getItem("mastered_words") || "[]",
     );
     setMasteredIds(savedMastered);
 
-    // 1. Get EVERY word that belongs to this level (don't filter mastery yet!)
-    const allWordsInThisLevel = wordsData.filter(
+    const allWordsInThisLevel = fetchedWords.filter(
       (w) =>
         w.rank > (selectedLevel - 1) * wordsPerLevel &&
         w.rank <= selectedLevel * wordsPerLevel,
     );
 
-    // 2. Identify which of these are NOT mastered
     const unmastered = allWordsInThisLevel.filter(
       (w) => !savedMastered.includes(w.rank),
     );
 
     if (unmastered.length > 0) {
-      // STUDY MODE: There are new words to learn
-      // We only put the unmastered ones in the queue
       setQueue(unmastered.slice(0, 10));
       setIsReviewMode(false);
     } else {
-      // REVIEW MODE: Level is already 100% complete
-      // We load ALL words from the level so the queue isn't empty!
       setQueue(allWordsInThisLevel);
       setIsReviewMode(true);
     }
@@ -81,50 +68,73 @@ export default function FlashcardApp() {
     setIsLoaded(true);
   });
 
-  // 1. INITIAL LOAD: Run this only once on mount
   useEffect(() => {
-    setInitialState();
+    const controller = new AbortController();
+    (async () => {
+      try {
+        setIsLoaded(false);
+        // Fetching a large limit to populate Map/Library correctly
+        const response = await fetch(`/api/vocabulary`, {
+          signal: controller.signal,
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch vocabulary");
+
+        const result = await response.json();
+        const data = result.data as VocabularyType[];
+
+        setWordsData(data); // Store full list for Map/Library
+        setInitialState(data);
+        setError(null);
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          console.error(err);
+          setError(err.message);
+        }
+      }
+    })();
+    return () => controller.abort();
   }, [selectedLevel]);
 
-  // 2. CORE LOGIC FUNCTIONS
+  // --- Event Handlers (Stay the same) ---
   const handleAgain = () => {
     setIsFlipped(false);
     setQueue((prev) => {
       const [first, ...rest] = prev;
-      return [...rest, first]; // Move to back of queue
+      return [...rest, first];
     });
   };
+
   const handleGood = () => {
     setIsFlipped(false);
-    setQueue((prev) => prev.slice(1)); // Just remove from current session
+    setQueue((prev) => prev.slice(1));
   };
 
-  const markAsMastered = (id: number) => {
-    setIsFlipped(false);
-    if (!isReviewMode) {
-      const newMastered = [...masteredIds, id];
-      setMasteredIds(newMastered);
-      localStorage.setItem("mastered_words", JSON.stringify(newMastered));
+  const markAsMastered = useCallback(
+    (id: number) => {
+      setIsFlipped(false);
+      if (!isReviewMode) {
+        const newMastered = [...masteredIds, id];
+        setMasteredIds(newMastered);
+        localStorage.setItem("mastered_words", JSON.stringify(newMastered));
+        setQueue((prev) => prev.slice(1));
 
-      setQueue((prev) => prev.slice(1));
-
-      const today = new Date().toISOString().split("T")[0];
-      const lastDate = localStorage.getItem("last_study_date");
-
-      if (lastDate !== today) {
-        const newStreak = streakCtx.streak + 1;
-        streakCtx.setStreak(newStreak);
-        localStorage.setItem("streak_count", newStreak.toString());
-        localStorage.setItem("last_study_date", today);
+        const today = new Date().toISOString().split("T")[0];
+        const lastDate = localStorage.getItem("last_study_date");
+        if (lastDate !== today) {
+          const newStreak = streakCtx.streak + 1;
+          streakCtx.setStreak(newStreak);
+          localStorage.setItem("streak_count", newStreak.toString());
+          localStorage.setItem("last_study_date", today);
+        }
+      } else {
+        setQueue((prev) => prev.slice(1));
       }
-    }
-    // Just remove from queue and move on
-    if (isReviewMode) {
-      setQueue((prev) => prev.slice(1));
-    }
-  };
+    },
+    [isReviewMode, masteredIds, streakCtx],
+  );
 
-  // 3. KEYBOARD SUPPORT
+  // Keyboard support remains same...
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!currentWord) return;
@@ -140,24 +150,23 @@ export default function FlashcardApp() {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isFlipped, currentWord]);
+  }, [isFlipped, currentWord, markAsMastered]);
 
-  // 4. SESSION COMPLETE STATE
-  if (!isLoaded)
+  if (!isLoaded && wordsData.length === 0)
     return (
-      <div className="min-h-screen bg-zinc-950 flex items-center justify-center">
+      <div className="min-h-screen bg-zinc-950 flex items-center justify-center w-full">
         <div className="w-10 h-10 border-4 border-amber-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
 
   return (
-    <div className="min-h-screen flex flex-col md:items-center w-full">
-      {/* Progress Header */}
+    <div className="flex flex-col md:items-center w-full">
       <ProgressBar
         masteredCount={masteredCount}
         wordsAvailableCount={wordsData.length}
       />
-      {view == "map" ? (
+
+      {view === "map" ? (
         <Map
           masteredIds={masteredIds}
           setSelectedLevel={setSelectedLevel}
@@ -166,7 +175,7 @@ export default function FlashcardApp() {
           wordsData={wordsData}
           wordsPerLevel={wordsPerLevel}
         />
-      ) : view == "View" ? (
+      ) : view === "library" ? ( // Note: Fixed case to match bottom nav
         <LibraryView
           masteredIds={masteredIds}
           searchQuery={searchQuery}
@@ -200,10 +209,7 @@ export default function FlashcardApp() {
           <div
             className={`relative w-full h-full min-h-[400px] transition-transform duration-500 transform-style-3d ${isFlipped ? "rotate-y-180" : ""}`}
           >
-            {/* Front Side (Arabic) */}
             <FrontSide currentWord={currentWord} />
-
-            {/* Back Side (English) */}
             <Backside
               handleGood={handleGood}
               handleAgain={handleAgain}
@@ -214,8 +220,6 @@ export default function FlashcardApp() {
         </div>
       )}
 
-      {/* Sidebar / Social Placeholder */}
-      {/* <Sidebar /> */}
       {/* Bottom Navigation */}
       <div className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-zinc-900/80 backdrop-blur-xl border border-zinc-800 p-2 rounded-full flex gap-2 shadow-2xl">
         <button
@@ -223,6 +227,12 @@ export default function FlashcardApp() {
           className={`px-6 py-2 cursor-pointer rounded-full text-xs font-black transition-all ${view === "map" ? "bg-amber-500 text-black" : "text-zinc-400"}`}
         >
           MAP
+        </button>
+        <button
+          onClick={() => setView("View")}
+          className={`px-6 py-2 cursor-pointer rounded-full text-xs font-black transition-all ${view === "View" ? "bg-amber-500 text-black" : "text-zinc-400"}`}
+        >
+          FLASHCARDS
         </button>
         <button
           onClick={() => setView("library")}
