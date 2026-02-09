@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
-// Mock Data (Replace with your real imports later)
 export interface Token {
   surface: string;
   index: number;
@@ -48,10 +47,9 @@ export interface ArticleMeta {
 const ArticleList = () => {
   const [articles, setArticles] = useState<Article[]>([]);
 
-  console.log(articles, "articles");
   useEffect(() => {
     async function loadArticles() {
-      const response = await fetch("/content/index.json");
+      const response = await fetch("/api/articles");
       const data = await response.json();
       setArticles(data);
     }
@@ -63,7 +61,7 @@ const ArticleList = () => {
       {articles.map((article) => (
         <Link
           href={`/read/${article.slug}`}
-          key={article.id}
+          key={article.slug}
           className="group block relative bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden hover:border-amber-500/50 transition-all active:scale-[0.98]"
         >
           {/* Progress Bar Top */}

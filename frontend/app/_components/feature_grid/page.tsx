@@ -1,3 +1,8 @@
+import HistoryTile from "./history_tile";
+import MapTile from "./map_tile";
+import PoetryTile from "./poetry_tile";
+import VocabBankTile from "./vocab_bank_tile";
+
 const FeatureGrid = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4 auto-rows-[300px]">
@@ -106,128 +111,16 @@ const FeatureGrid = () => {
       </div>
 
       {/* 3. Interactive Map Snapshot */}
-      {/* 3. Interactive Map Snapshot */}
-      <div className="relative bg-zinc-900 border border-zinc-800 rounded-3xl p-8 overflow-hidden flex flex-col gap-8">
-        {/* Header */}
-        <div className="max-w-[60%]">
-          <h3 className="text-3xl font-bold mb-2 tracking-tight">The Map</h3>
-          <p className="text-zinc-400 text-sm leading-relaxed">
-            A spatial curriculum that unlocks as you master words.
-          </p>
-        </div>
-
-        {/* Framed Map Preview */}
-        <div className="relative bg-zinc-850 border border-zinc-800 rounded-2xl p-6 shadow-lg">
-          {/* Soft vignette */}
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent rounded-2xl" />
-
-          {/* Mini Grid */}
-          <div className="grid grid-cols-5 gap-y-10 gap-x-4 pb-6">
-            {Array.from({ length: 12 }).map((_, i) => {
-              const state =
-                i === 0 || i === 1
-                  ? "completed"
-                  : i === 2
-                    ? "active"
-                    : i > 6
-                      ? "locked"
-                      : "idle";
-
-              return (
-                <div key={i} className="relative flex flex-col items-center">
-                  {/* Connector */}
-                  {i % 5 !== 4 && (
-                    <div className="absolute top-1/2 left-[70%] w-full h-px bg-zinc-800" />
-                  )}
-
-                  {/* Node */}
-                  <div
-                    className={`
-                w-8 h-8 rotate-45 border flex items-center justify-center
-                ${
-                  state === "completed"
-                    ? "bg-white border-white text-black"
-                    : state === "active"
-                      ? "bg-zinc-900 border-amber-400 text-amber-400"
-                      : state === "locked"
-                        ? "bg-zinc-900 border-zinc-800 text-zinc-700"
-                        : "bg-zinc-900 border-zinc-700 text-zinc-400"
-                }
-              `}
-                  >
-                    <span className="-rotate-45 text-[9px] font-bold">
-                      {state === "completed" ? "✓" : i + 1}
-                    </span>
-                  </div>
-
-                  {/* Progress */}
-                  <div className="absolute -bottom-4 w-8 h-[2px] bg-zinc-800 rounded-full overflow-hidden">
-                    {state === "active" && (
-                      <div className="h-full w-1/2 bg-amber-400" />
-                    )}
-                    {state === "completed" && (
-                      <div className="h-full w-full bg-white" />
-                    )}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Neutral light wash */}
-        <div className="pointer-events-none absolute -top-24 right-0 w-[260px] h-[260px] bg-white/5 blur-[140px]" />
-      </div>
+      <MapTile />
 
       {/* 4. Vocab Bank Snapshot */}
-      {/* 4. Vocab Bank Snapshot */}
-      <div className="md:col-span-2 relative bg-zinc-900 rounded-3xl p-8 border border-zinc-800 overflow-hidden group">
-        {/* Soft neutral glow */}
-        <div className="absolute -top-24 -right-24 w-[260px] h-[260px] bg-white/5 blur-[120px]" />
+      <VocabBankTile />
 
-        {/* Header */}
-        <div className="relative z-10 flex justify-between items-center mb-8">
-          <div>
-            <h3 className="text-3xl font-bold tracking-tight">
-              Your Word Bank
-            </h3>
-            <p className="text-zinc-500 text-sm mt-1">
-              Every word you’ve mastered — always one tap away.
-            </p>
-          </div>
+      {/* 5. Poetry Discovery - Span 2 */}
+      <PoetryTile />
 
-          <span className="bg-zinc-800 border border-zinc-700 px-4 py-1.5 rounded-full text-xs text-zinc-400 tracking-wide">
-            42 mastered
-          </span>
-        </div>
-
-        {/* Words */}
-        <div className="relative z-10 flex flex-wrap gap-3 max-w-[90%]">
-          {["العلم", "السلام", "المستقبل", "التاريخ", "الثقافة", "المعرفة"].map(
-            (word, i) => (
-              <span
-                key={word}
-                className={`
-            px-4 py-2 rounded-xl font-arabic text-lg cursor-default
-            border transition-colors duration-300
-            ${
-              i % 3 === 0
-                ? "bg-zinc-800 border-zinc-600 text-white"
-                : "bg-zinc-850 border-zinc-700 text-zinc-200 hover:border-zinc-500"
-            }
-          `}
-              >
-                {word}
-              </span>
-            ),
-          )}
-        </div>
-
-        {/* Continuation hint */}
-        <div className="absolute bottom-6 right-8 text-zinc-600 text-sm tracking-widest uppercase">
-          + hundreds more
-        </div>
-      </div>
+      {/* 6. History Discovery - Span 1 (Palestine) */}
+      <HistoryTile />
     </div>
   );
 };

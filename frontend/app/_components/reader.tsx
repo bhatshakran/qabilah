@@ -25,6 +25,7 @@ export default function Reader({ article }: { article: Article }) {
     theme: "dark",
     showEnglish: true,
   });
+  console.log(article, "article");
 
   const updateSettings = (newFields: Partial<ReaderSettings>) => {
     setSettings((prev) => ({ ...prev, ...newFields }));
@@ -131,9 +132,9 @@ export default function Reader({ article }: { article: Article }) {
       <div className="space-y-12">
         {article.paragraphs.map((p) => (
           <div key={p.paragraphIndex} className="space-y-8">
-            {p.sentences.map((s) => (
+            {p.sentences.map((s, i) => (
               <div
-                key={s.id}
+                key={s.sentenceIndex}
                 className={`transition-opacity duration-300 ${
                   selectedTokenKey && !selectedTokenKey.startsWith(s.id)
                     ? "opacity-40"

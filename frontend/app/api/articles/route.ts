@@ -16,6 +16,7 @@ export async function GET() {
         difficulty: 1,
         date: 1,
         category: 1,
+        level: 1,
         // We don't fetch "paragraphs" here
       },
     ).sort({ date: -1 });

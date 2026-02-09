@@ -13,8 +13,6 @@ const LandingPage = async () => {
     .limit(3)
     .lean();
 
-  console.log(latestArticles, "articles");
-
   return (
     <div className="min-h-screen bg-black text-white selection:bg-amber-500/30">
       {/* 1. The Hook */}
