@@ -1,0 +1,6 @@
+.vscode
+
+*.json
+*.txt
+*.docx
+node_modules
