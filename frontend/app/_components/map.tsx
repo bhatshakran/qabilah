@@ -1,4 +1,4 @@
-import { CurrentWord } from "../flashcard";
+import { VocabularyType } from "../models/vocabulary";
 
 const Map = ({
   setView,
@@ -13,7 +13,7 @@ const Map = ({
   wordsPerLevel: number;
   masteredIds: number[];
   setSelectedLevel: (level: number) => void;
-  wordsData: CurrentWord[];
+  wordsData: VocabularyType[];
 }) => {
   return (
     <div className="w-full mx-auto p-8 select-none ">

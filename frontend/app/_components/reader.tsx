@@ -7,6 +7,7 @@ import WordPopover from "./word_popover";
 import { createPortal } from "react-dom";
 import { BookOpen, MessageSquare } from "lucide-react";
 import ArticleSidebar from "./article_sidebar";
+import { useAuth } from "../contexts/authContext";
 
 export default function Reader({ article }: { article: Article }) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
@@ -18,7 +19,7 @@ export default function Reader({ article }: { article: Article }) {
     word: string;
     pos: { top: number; left: number };
   } | null>(null);
-
+  const { user } = useAuth();
   const [settings, setSettings] = useState<ReaderSettings>({
     fontSize: 24,
     fontFamily: "amiri",
@@ -193,28 +194,30 @@ export default function Reader({ article }: { article: Article }) {
                 }`}
               >
                 {/* Sidebar Indicators */}
-                <div className="flex flex-col gap-1 w-6 pt-1 opacity-50 group-hover:opacity-100 transition-opacity">
-                  <button
-                    onClick={() => {
-                      setActiveBlock(s.sentenceIndex);
-                      setSidebarOpen(true);
-                      setTab("halaqa");
-                    }}
-                    className="p-1 hover:text-amber-500 text-zinc-700 transition-colors"
-                  >
-                    <MessageSquare size={14} />
-                  </button>
-                  <button
-                    onClick={() => {
-                      setActiveBlock(s.sentenceIndex);
-                      setSidebarOpen(true);
-                      setTab("notebook");
-                    }}
-                    className="p-1 hover:text-amber-500 text-zinc-700 transition-colors"
-                  >
-                    <BookOpen size={14} />
-                  </button>
-                </div>
+                {user && (
+                  <div className="flex flex-col gap-1 w-6 pt-1 opacity-50 group-hover:opacity-100 transition-opacity">
+                    <button
+                      onClick={() => {
+                        setActiveBlock(s.sentenceIndex);
+                        setSidebarOpen(true);
+                        setTab("halaqa");
+                      }}
+                      className="p-1 hover:text-amber-500 text-zinc-700 transition-colors"
+                    >
+                      <MessageSquare size={14} />
+                    </button>
+                    <button
+                      onClick={() => {
+                        setActiveBlock(s.sentenceIndex);
+                        setSidebarOpen(true);
+                        setTab("notebook");
+                      }}
+                      className="p-1 hover:text-amber-500 text-zinc-700 transition-colors"
+                    >
+                      <BookOpen size={14} />
+                    </button>
+                  </div>
+                )}
                 {/* Arabic */}
                 <div
                   dir="rtl"

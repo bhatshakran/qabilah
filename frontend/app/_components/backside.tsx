@@ -1,4 +1,4 @@
-import type { CurrentWord } from '../flashcard';
+import { VocabularyType } from "../models/vocabulary";
 
 const Backside = ({
   currentWord,
@@ -6,7 +6,7 @@ const Backside = ({
   handleAgain,
   markAsMastered,
 }: {
-  currentWord: CurrentWord;
+  currentWord: VocabularyType;
   handleGood: () => void;
   handleAgain: () => void;
   markAsMastered: (rank: number) => void;

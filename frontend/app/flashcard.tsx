@@ -87,10 +87,11 @@ export default function FlashcardApp() {
         setInitialState(data);
         setError(null);
       } catch (err) {
-        if (err.name !== "AbortError") {
-          console.error(err);
-          setError(err.message);
+        if (err instanceof DOMException && err.name === "AbortError") {
+          return; // ignore
         }
+        console.error(err);
+        setError("Failed to fetch vocab!");
       }
     })();
     return () => controller.abort();

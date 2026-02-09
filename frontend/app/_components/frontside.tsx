@@ -1,15 +1,15 @@
-import type { CurrentWord } from '../flashcard';
+import { VocabularyType } from "../models/vocabulary";
 
-const FrontSide = ({ currentWord }: { currentWord: CurrentWord }) => {
+const FrontSide = ({ currentWord }: { currentWord: VocabularyType }) => {
   const cleanArabicForSpeech = (text: string) => {
     // 1. Remove slashes and replace with a comma (which tells the engine to pause)
-    const cleaned = text.replace(/\//g, '،');
+    const cleaned = text.replace(/\//g, "،");
 
     // 2. The "End Vowel" Fix:
     // Native engines often ignore final harakat.
     // Adding a 'tatweel' (ـ) or a tiny pause after the word can sometimes force it.
     // But the most effective way is ensuring the string ends with the vowel and a space.
-    return cleaned.trim() + ' ';
+    return cleaned.trim() + " ";
   };
   const speak = (text: string) => {
     window.speechSynthesis.cancel();
@@ -23,12 +23,12 @@ const FrontSide = ({ currentWord }: { currentWord: CurrentWord }) => {
     // CRITICAL: Some voices are 'Natural' and some are 'Legacy'.
     // Look for "Google" or "Microsoft" Arabic voices as they usually handle tashkeel better.
     const arVoice =
-      voices.find((v) => v.lang.includes('ar') && v.name.includes('Google')) ||
-      voices.find((v) => v.lang.includes('ar')) ||
+      voices.find((v) => v.lang.includes("ar") && v.name.includes("Google")) ||
+      voices.find((v) => v.lang.includes("ar")) ||
       voices[0];
 
     utterance.voice = arVoice;
-    utterance.lang = 'ar-SA';
+    utterance.lang = "ar-SA";
 
     // SLOW IT DOWN: 0.7 or 0.8 is the sweet spot for hearing final vowels
     utterance.rate = 0.75;
@@ -69,7 +69,7 @@ const FrontSide = ({ currentWord }: { currentWord: CurrentWord }) => {
       </h1>
 
       <p className="text-zinc-500 text-lg font-medium italic tracking-wide lowercase">
-        {currentWord.transliteration || '...'}
+        {currentWord.transliteration || "..."}
       </p>
       <p className="text-zinc-500 text-sm mt-4">Press Space to Reveal</p>
     </div>

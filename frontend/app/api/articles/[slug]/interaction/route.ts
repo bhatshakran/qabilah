@@ -7,7 +7,7 @@ import Note from "../../../../models/note";
 
 export async function POST(
   request: Request,
-  { params }: { params: { slug: string } },
+  context: { params: Promise<{ slug: string }> },
 ) {
   try {
     const token = (await cookies()).get("qabilah_token")?.value;
@@ -19,9 +19,8 @@ export async function POST(
     const { type, sentenceIndex, content, authorName } = await request.json();
 
     await connectToDatabase();
-    const awaitedParams = await params;
-    const slug = awaitedParams.slug;
-
+    const { slug } = await context.params;
+    console.log("we wfw");
     console.log(
       {
         slug,

@@ -99,7 +99,7 @@ export default function ArticleSidebar({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-y-0 right-0 w-full max-w-sm bg-zinc-900 border-l border-zinc-800 shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300">
+    <div className="fixed inset-y-0 h-screen right-0 w-full max-w-sm bg-zinc-900 border-l border-zinc-800 shadow-2xl z-50 flex flex-col animate-in slide-in-from-right duration-300">
       {/* Header */}
       <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
         <div className="flex bg-black p-1 rounded-xl">
