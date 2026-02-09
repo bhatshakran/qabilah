@@ -31,10 +31,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <AuthProvider>
-          <StreakProvider>
-            <Header />
-            {children}
-          </StreakProvider>
+          <StreakProvider>{children}</StreakProvider>
         </AuthProvider>
       </body>
     </html>
