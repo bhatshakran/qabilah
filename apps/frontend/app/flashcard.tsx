@@ -9,11 +9,12 @@ import Map from "./_components/map";
 import { useStreak } from "./contexts/streakContext";
 import { VocabularyType } from "./models/vocabulary";
 import useSWR from "swr";
-
-export const fetcher = <T,>(url: string): Promise<T> =>
-  fetch(url).then((res) => res.json());
+import { preload } from "swr";
 
 export type View = "map" | "cards" | "library";
+export const fetcher = <T,>(url: string): Promise<T> =>
+  fetch(url).then((res) => res.json());
+preload(`/api/vocabulary`, fetcher);
 
 export default function FlashcardApp() {
   const { data: response, isLoading } = useSWR<{
