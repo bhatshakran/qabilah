@@ -8,37 +8,31 @@ import LibraryView from "./_components/library_view";
 import Map from "./_components/map";
 import { useStreak } from "./contexts/streakContext";
 import { VocabularyType } from "./models/vocabulary";
+import useSWR from "swr";
+
+export const fetcher = <T,>(url: string): Promise<T> =>
+  fetch(url).then((res) => res.json());
+
+export type View = "map" | "cards" | "library";
 
 export default function FlashcardApp() {
+  const { data: response, isLoading } = useSWR<{
+    data: VocabularyType[];
+    pagination: { total: number };
+  }>("/api/vocabulary", fetcher);
+  const wordsData = response?.data;
+  // const totalCount = response?.pagination.total;
   const [isFlipped, setIsFlipped] = useState(false);
   const streakCtx = useStreak();
   const [masteredIds, setMasteredIds] = useState<number[]>([]);
-  const [error, setError] = useState<string | null>(null);
   const [queue, setQueue] = useState<VocabularyType[]>([]);
-  const [wordsData, setWordsData] = useState<VocabularyType[]>([]); // New state for DB data
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [view, setView] = useState("library");
+  const [view, setView] = useState<View>("library");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLevel, setSelectedLevel] = useState(1);
   const [isReviewMode, setIsReviewMode] = useState(false);
 
   const wordsPerLevel = 10;
   const currentWord = queue[0];
-
-  // --- Derived State  ---
-  const totalLevels = Math.ceil(wordsData.length / wordsPerLevel);
-  const levelWords = wordsData.filter(
-    (w) =>
-      w.rank > (selectedLevel - 1) * wordsPerLevel &&
-      w.rank <= selectedLevel * wordsPerLevel,
-  );
-
-  const masteredCount = masteredIds.length;
-  const masteredInLevel = levelWords.filter((w) =>
-    masteredIds.includes(w.rank),
-  ).length;
-  const isLevelComplete =
-    levelWords.length > 0 && masteredInLevel === levelWords.length;
 
   // --- Core Logic ---
   const setInitialState = useEffectEvent((fetchedWords: VocabularyType[]) => {
@@ -64,52 +58,13 @@ export default function FlashcardApp() {
       setQueue(allWordsInThisLevel);
       setIsReviewMode(true);
     }
-
-    setIsLoaded(true);
   });
 
   useEffect(() => {
-    const controller = new AbortController();
-    (async () => {
-      try {
-        setIsLoaded(false);
-        // Fetching a large limit to populate Map/Library correctly
-        const response = await fetch(`/api/vocabulary`, {
-          signal: controller.signal,
-        });
-
-        if (!response.ok) throw new Error("Failed to fetch vocabulary");
-
-        const result = await response.json();
-        const data = result.data as VocabularyType[];
-
-        setWordsData(data); // Store full list for Map/Library
-        setInitialState(data);
-        setError(null);
-      } catch (err) {
-        if (err instanceof DOMException && err.name === "AbortError") {
-          return; // ignore
-        }
-        console.error(err);
-        setError("Failed to fetch vocab!");
-      }
-    })();
-    return () => controller.abort();
-  }, [selectedLevel]);
-
-  // --- Event Handlers (Stay the same) ---
-  const handleAgain = () => {
-    setIsFlipped(false);
-    setQueue((prev) => {
-      const [first, ...rest] = prev;
-      return [...rest, first];
-    });
-  };
-
-  const handleGood = () => {
-    setIsFlipped(false);
-    setQueue((prev) => prev.slice(1));
-  };
+    if (wordsData) {
+      setInitialState(wordsData);
+    }
+  }, [wordsData]);
 
   const markAsMastered = useCallback(
     (id: number) => {
@@ -135,6 +90,19 @@ export default function FlashcardApp() {
     [isReviewMode, masteredIds, streakCtx],
   );
 
+  // --- Event Handlers (Stay the same) ---
+  const handleAgain = () => {
+    setIsFlipped(false);
+    setQueue((prev) => {
+      const [first, ...rest] = prev;
+      return [...rest, first];
+    });
+  };
+
+  const handleGood = () => {
+    setIsFlipped(false);
+    setQueue((prev) => prev.slice(1));
+  };
   // Keyboard support remains same...
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -153,12 +121,27 @@ export default function FlashcardApp() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isFlipped, currentWord, markAsMastered]);
 
-  if (!isLoaded && wordsData.length === 0)
+  if (isLoading || !wordsData) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center w-full">
         <div className="w-10 h-10 border-4 border-amber-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
+  }
+  // --- Derived State  ---
+  const totalLevels = Math.ceil(wordsData.length / wordsPerLevel);
+  const levelWords = wordsData?.filter(
+    (w) =>
+      w.rank > (selectedLevel - 1) * wordsPerLevel &&
+      w.rank <= selectedLevel * wordsPerLevel,
+  );
+
+  const masteredCount = masteredIds.length;
+  const masteredInLevel = levelWords?.filter((w) =>
+    masteredIds.includes(w.rank),
+  ).length;
+  const isLevelComplete =
+    levelWords?.length > 0 && masteredInLevel === levelWords?.length;
 
   return (
     <div className="flex flex-col md:items-center w-full">
@@ -191,7 +174,6 @@ export default function FlashcardApp() {
           currentLevel={selectedLevel}
           totalLevels={totalLevels}
           onNextLevel={() => {
-            setIsLoaded(false);
             setSelectedLevel((prev) => prev + 1);
           }}
         />
@@ -230,8 +212,8 @@ export default function FlashcardApp() {
           MAP
         </button>
         <button
-          onClick={() => setView("View")}
-          className={`px-6 py-2 cursor-pointer rounded-full text-xs font-black transition-all ${view === "View" ? "bg-amber-500 text-black" : "text-zinc-400"}`}
+          onClick={() => setView("cards")}
+          className={`px-6 py-2 cursor-pointer rounded-full text-xs font-black transition-all ${view === "cards" ? "bg-amber-500 text-black" : "text-zinc-400"}`}
         >
           FLASHCARDS
         </button>

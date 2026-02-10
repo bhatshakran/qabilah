@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import useSWR from "swr";
+import { Loader2 } from "lucide-react";
 export interface Token {
   surface: string;
   index: number;
@@ -43,19 +44,22 @@ export interface ArticleMeta {
   category: string;
   progress: number; // 0 to 100
 }
-
+const fetcher = <T,>(url: string): Promise<T> =>
+  fetch(url).then((res) => res.json());
 const ArticleList = () => {
-  const [articles, setArticles] = useState<Article[]>([]);
+  const { data: articles, isLoading } = useSWR<Article[]>(
+    "/api/articles",
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false,
+    },
+  );
 
-  useEffect(() => {
-    async function loadArticles() {
-      const response = await fetch("/api/articles");
-      const data = await response.json();
-      setArticles(data);
-    }
-    loadArticles();
-  }, []);
-
+  if (isLoading || !articles) {
+    return <Loader2 className="animate-spin" />;
+  }
   return (
     <div className="space-y-4 h-[65vh] overflow-y-auto pr-2 scrollbar-hide pb-20">
       {articles.map((article) => (

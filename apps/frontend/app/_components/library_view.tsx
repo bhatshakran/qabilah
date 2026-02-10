@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ArticleList from "./article_list";
 import { VocabularyType } from "../models/vocabulary";
+import { View } from "../flashcard";
 
 const VocabLibrary = ({
   wordsData,
@@ -83,7 +84,7 @@ const LibraryView = ({
   wordsData,
   masteredIds,
 }: {
-  setView: (view: string) => void;
+  setView: (view: View) => void;
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   wordsData: VocabularyType[];

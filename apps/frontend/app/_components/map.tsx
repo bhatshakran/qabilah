@@ -1,3 +1,4 @@
+import { View } from "../flashcard";
 import { VocabularyType } from "../models/vocabulary";
 
 const Map = ({
@@ -8,7 +9,7 @@ const Map = ({
   setSelectedLevel,
   wordsData,
 }: {
-  setView: (view: string) => void;
+  setView: (view: View) => void;
   totalLevels: number;
   wordsPerLevel: number;
   masteredIds: number[];
@@ -65,7 +66,7 @@ const Map = ({
                 disabled={isLocked}
                 onClick={() => {
                   setSelectedLevel(level);
-                  setView("study");
+                  setView("cards");
                 }}
                 className={`
                   relative w-16 h-16 flex items-center justify-center transition-all duration-300

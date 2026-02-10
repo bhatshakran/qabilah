@@ -1,3 +1,5 @@
+import { View } from "../flashcard";
+
 const Result = ({
   setView,
   isLevelComplete,
@@ -5,7 +7,7 @@ const Result = ({
   onNextLevel,
   totalLevels,
 }: {
-  setView: (view: string) => void;
+  setView: (view: View) => void;
   isLevelComplete: boolean;
   currentLevel: number;
   onNextLevel: () => void;
@@ -19,11 +21,11 @@ const Result = ({
       {/* Dynamic Icon/Emoji Based on State */}
       <div className="relative mb-8">
         <div
-          className={`absolute inset-0 blur-2xl opacity-20 animate-pulse ${isGrandFinale ? 'bg-emerald-500' : 'bg-amber-500'}`}
+          className={`absolute inset-0 blur-2xl opacity-20 animate-pulse ${isGrandFinale ? "bg-emerald-500" : "bg-amber-500"}`}
         ></div>
         <div className="relative w-24 h-24 bg-zinc-900 border-2 border-white/10 rounded-full flex items-center justify-center shadow-2xl">
           <span className="text-5xl">
-            {isGrandFinale ? '👑' : isLevelComplete && '🔓'}
+            {isGrandFinale ? "👑" : isLevelComplete && "🔓"}
           </span>
         </div>
       </div>
@@ -31,14 +33,14 @@ const Result = ({
       {/* Dynamic Heading */}
       <h1 className="text-4xl font-black mb-2 tracking-tight uppercase">
         {isGrandFinale
-          ? 'Tribe Legend!'
+          ? "Tribe Legend!"
           : isLevelComplete && `Level ${currentLevel} Clear`}
       </h1>
 
       {/* Dynamic Description */}
       <p className="text-zinc-400 mb-10 font-medium leading-relaxed">
         {isGrandFinale
-          ? 'You have mastered all 5,000 words. You are now a master of the language and a legend of the Tribe.'
+          ? "You have mastered all 5,000 words. You are now a master of the language and a legend of the Tribe."
           : isLevelComplete &&
             `You've conquered Level ${currentLevel}. The journey continues!`}
       </p>
@@ -47,7 +49,7 @@ const Result = ({
         {isGrandFinale ? (
           /* End of Journey Button */
           <button
-            onClick={() => setView('library')}
+            onClick={() => setView("library")}
             className="w-full py-5 bg-emerald-500 text-black font-black rounded-2xl transition-all active:scale-95 shadow-xl shadow-emerald-500/20"
           >
             BROWSE YOUR LIBRARY
@@ -65,7 +67,7 @@ const Result = ({
         )}
 
         <button
-          onClick={() => setView('map')}
+          onClick={() => setView("map")}
           className="w-full py-4 text-zinc-500 font-bold hover:text-white transition-colors flex items-center justify-center gap-2"
         >
           <svg
