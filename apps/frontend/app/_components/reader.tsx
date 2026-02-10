@@ -49,9 +49,9 @@ export default function Reader({ article }: { article: Article }) {
       word: token.surface,
       pos: {
         // rect.top is the distance from the top of the visible screen
-        top: rect.top,
+        top: rect.top - 100,
         // rect.left is the distance from the left of the visible screen
-        left: rect.left + rect.width / 2,
+        left: rect.left - 100,
       },
     });
     setSelectedTokenKey((prev) =>
