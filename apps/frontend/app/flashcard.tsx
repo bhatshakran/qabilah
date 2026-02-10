@@ -20,7 +20,11 @@ export default function FlashcardApp() {
   const { data: response, isLoading } = useSWR<{
     data: VocabularyType[];
     pagination: { total: number };
-  }>("/api/vocabulary", fetcher);
+  }>("/api/vocabulary", fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+    revalidateIfStale: false,
+  });
   const wordsData = response?.data;
   // const totalCount = response?.pagination.total;
   const [isFlipped, setIsFlipped] = useState(false);
