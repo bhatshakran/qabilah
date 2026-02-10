@@ -4,3 +4,5 @@
 *.txt
 *.docx
 node_modules
+
+.turbo
