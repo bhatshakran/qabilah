@@ -11,7 +11,7 @@ const Header = () => {
   const { streak } = useStreak();
   const [showSignin, setShowSignin] = useState(false);
   return (
-    <div className="w-full flex items-center justify-between flex-wrap mb-10 pt-4 mx-auto px-4">
+    <div className="w-full flex items-center justify-between flex-wrap mb-10 pt-4 mx-auto px-4 gap-y-4">
       <Link href={"/"} className="flex items-center gap-3">
         {/* Logo: Geometric Crescent */}
         <div className="relative w-10 h-10 flex items-center justify-center cursor-pointer">
@@ -33,30 +33,29 @@ const Header = () => {
         </div>
       </Link>
 
-      {/* Streak Counter */}
-      {user && (
-        <div className="flex items-center">
-          <div
-            className={`flex items-center gap-2 px-4 py-2 rounded-2xl border transition-all ${streak > 0 ? "bg-orange-500/10 border-orange-500/30" : "bg-zinc-900 border-zinc-800"}`}
-          >
-            <span className={`text-xl ${streak > 0 ? "" : "grayscale"}`}>
-              🔥
-            </span>
-            <div className="flex flex-col">
-              <span className="text-[10px] text-zinc-500 font-bold uppercase leading-none">
-                Streak
-              </span>
-              <span
-                className={`text-sm font-black ${streak > 0 ? "text-orange-500" : "text-zinc-400"}`}
-              >
-                {streak} {streak === 1 ? "Day" : "Days"}
-              </span>
-            </div>
-          </div>{" "}
-        </div>
-      )}
-
       <div className="flex items-center gap-6">
+        {/* Streak Counter */}
+        {user && (
+          <div className="flex items-center">
+            <div
+              className={`flex items-center gap-2 px-4 py-2 rounded-2xl border transition-all ${streak > 0 ? "bg-orange-500/10 border-orange-500/30" : "bg-zinc-900 border-zinc-800"}`}
+            >
+              <span className={`text-xl ${streak > 0 ? "" : "grayscale"}`}>
+                🔥
+              </span>
+              <div className="flex flex-col">
+                <span className="text-[10px] text-zinc-500 font-bold uppercase leading-none">
+                  Streak
+                </span>
+                <span
+                  className={`text-sm font-black ${streak > 0 ? "text-orange-500" : "text-zinc-400"}`}
+                >
+                  {streak} {streak === 1 ? "Day" : "Days"}
+                </span>
+              </div>
+            </div>{" "}
+          </div>
+        )}
         {loading ? (
           <div className="w-4 h-4 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
         ) : user ? (

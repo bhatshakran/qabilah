@@ -108,7 +108,7 @@ export default function Reader({ article }: { article: Article }) {
           <div className="flex items-center gap-4 justify-between grow">
             <button
               onClick={() => setIsSettingsOpen(true)}
-              className="group flex items-center justify-center w-10 h-10 
+              className="group flex items-center justify-center sm:w-10 sm:h-10 
              rounded-lg border border-zinc-800 bg-zinc-900 
              text-zinc-500 hover:text-white hover:border-zinc-600 
              hover:bg-zinc-800 transition-all duration-200 
@@ -130,14 +130,14 @@ export default function Reader({ article }: { article: Article }) {
             </button>
 
             {/* Chapter Indicator */}
-            <div className="hidden sm:flex flex-col pl-6">
+            <div className="flex flex-col pl-6">
               <h1
                 dir="rtl"
-                className="text-lg md:text-xl font-amiri font-bold text-amber-500 tracking-wide text-right"
+                className="text-sm sm:text-lg md:text-xl font-amiri font-bold text-amber-500 tracking-wide text-right"
               >
                 {article.title}
               </h1>
-              <span className="font-medium text-xl truncate text-wrap">
+              <span className="text-sm sm:text-lg font-medium truncate text-wrap">
                 {article.subtitle}
               </span>
             </div>

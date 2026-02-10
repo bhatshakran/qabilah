@@ -1,8 +1,7 @@
-'use client';
 export interface ReaderSettings {
   fontSize: number;
   fontFamily: string;
-  theme: 'dark' | 'light' | 'sepia';
+  theme: "dark" | "light" | "sepia";
   showEnglish: boolean;
 }
 interface SettingsPaneProps {
@@ -19,9 +18,9 @@ export default function SettingsPane({
   updateSettings,
 }: SettingsPaneProps) {
   const themes = {
-    dark: 'bg-zinc-900 text-zinc-100',
-    light: 'bg-white text-zinc-900',
-    sepia: 'bg-[#f4ecd8] text-[#5b4636]',
+    dark: "bg-zinc-900 text-zinc-100",
+    light: "bg-white text-zinc-900",
+    sepia: "bg-[#f4ecd8] text-[#5b4636]",
   };
 
   return (
@@ -36,7 +35,7 @@ export default function SettingsPane({
 
       {/* Drawer */}
       <div
-        className={`fixed inset-y-0 right-0 w-80 bg-zinc-900 border-l border-zinc-800 z-50 transform transition-transform duration-300 ease-in-out p-6 shadow-2xl ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}
+        className={`fixed inset-y-0 h-dvh right-0 w-80 bg-zinc-900 border-l border-zinc-800 z-50 transform transition-transform duration-300 ease-in-out p-6 shadow-2xl ${isOpen ? "translate-x-0" : "translate-x-full"}`}
       >
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-lg font-bold text-white">Reader Settings</h2>
@@ -77,14 +76,14 @@ export default function SettingsPane({
               Background
             </label>
             <div className="grid grid-cols-3 gap-3">
-              {(['dark', 'light', 'sepia'] as const).map((t) => (
+              {(["dark", "light", "sepia"] as const).map((t) => (
                 <button
                   key={t}
                   onClick={() => updateSettings({ theme: t })}
                   className={`h-12 rounded-lg border-2 transition-all ${themes[t]} ${
                     settings.theme === t
-                      ? 'border-amber-500 scale-105'
-                      : 'border-zinc-800 hover:border-zinc-600'
+                      ? "border-amber-500 scale-105"
+                      : "border-zinc-800 hover:border-zinc-600"
                   }`}
                 >
                   {t.charAt(0).toUpperCase() + t.slice(1)}
@@ -102,10 +101,10 @@ export default function SettingsPane({
               onClick={() =>
                 updateSettings({ showEnglish: !settings.showEnglish })
               }
-              className={`w-12 h-6 rounded-full transition-colors relative ${settings.showEnglish ? 'bg-emerald-500' : 'bg-zinc-700'}`}
+              className={`w-12 h-6 rounded-full transition-colors relative ${settings.showEnglish ? "bg-emerald-500" : "bg-zinc-700"}`}
             >
               <div
-                className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${settings.showEnglish ? 'left-7' : 'left-1'}`}
+                className={`absolute top-1 w-4 h-4 bg-white rounded-full transition-all ${settings.showEnglish ? "left-7" : "left-1"}`}
               />
             </button>
           </section>
