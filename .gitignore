@@ -1,6 +1,6 @@
 .vscode
 
-*.json
+apps/backend/*.json
 *.txt
 *.docx
 node_modules
