@@ -17,7 +17,7 @@ export async function GET(request: Request) {
 
     const responseData = user
       ? {
-          streakCount: user.streakCount,
+          streak_count: user.streak_count,
           lastStudyData: user.last_study_date,
           mastered_words: user.mastered_words.map(Number),
           _id: user._id.toString(),

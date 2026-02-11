@@ -36,10 +36,10 @@ const Header = () => {
         {user && (
           <div className="flex items-center">
             <div
-              className={`flex items-center gap-2 px-4 py-2 rounded-2xl border transition-all ${user.streakCount > 0 ? "bg-orange-500/10 border-orange-500/30" : "bg-zinc-900 border-zinc-800"}`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-2xl border transition-all ${user.streak_count > 0 ? "bg-orange-500/10 border-orange-500/30" : "bg-zinc-900 border-zinc-800"}`}
             >
               <span
-                className={`text-xl ${user.streakCount > 0 ? "" : "grayscale"}`}
+                className={`text-xl ${user.streak_count > 0 ? "" : "grayscale"}`}
               >
                 🔥
               </span>
@@ -48,9 +48,9 @@ const Header = () => {
                   Streak
                 </span>
                 <span
-                  className={`text-sm font-black ${user.streakCount > 0 ? "text-orange-500" : "text-zinc-400"}`}
+                  className={`text-sm font-black ${user.streak_count > 0 ? "text-orange-500" : "text-zinc-400"}`}
                 >
-                  {user.streakCount} {user.streakCount === 1 ? "Day" : "Days"}
+                  {user.streak_count} {user.streak_count === 1 ? "Day" : "Days"}
                 </span>
               </div>
             </div>{" "}

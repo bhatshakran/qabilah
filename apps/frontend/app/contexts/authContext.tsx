@@ -11,7 +11,7 @@ interface User {
   name: string;
   email: string;
   userId: string;
-  streakCount: number;
+  streak_count: number;
 }
 
 interface AuthContextType {

@@ -1,14 +1,10 @@
 "use client";
 import { useState, useEffect, useEffectEvent, useCallback } from "react";
-import FrontSide from "./_components/frontside";
-import Backside from "./_components/backside";
 import ProgressBar from "./_components/progress_bar";
 import Result from "./_components/result";
 import LibraryView from "./_components/library_view";
 import Map from "./_components/map";
 import { VocabularyType } from "./models/vocabulary";
-import useSWR from "swr";
-import { preload } from "swr";
 import { useUserProgress } from "./hooks/useUserProgress";
 import { useAuth } from "./contexts/authContext";
 import Flashcard from "./_components/flashcard";
@@ -16,22 +12,12 @@ import Flashcard from "./_components/flashcard";
 export type View = "map" | "cards" | "library";
 export const fetcher = <T,>(url: string): Promise<T> =>
   fetch(url).then((res) => res.json());
-preload(`/api/vocabulary`, fetcher);
 
-export default function FlashcardApp() {
-  const { data: response, isLoading } = useSWR<{
-    data: VocabularyType[];
-    pagination: { total: number };
-  }>("/api/vocabulary", fetcher, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    revalidateIfStale: false,
-  });
+export default function FlashcardApp({ vocab }: { vocab: VocabularyType[] }) {
   const { user } = useAuth();
-  const wordsData = response?.data;
+  const wordsData = vocab;
   // const totalCount = response?.pagination.total;
   const [isFlipped, setIsFlipped] = useState(false);
-  // const [masteredIds, setMasteredIds] = useState<number[]>([]);
   const [queue, setQueue] = useState<VocabularyType[]>([]);
   const [view, setView] = useState<View>("library");
   const [searchQuery, setSearchQuery] = useState("");
@@ -43,9 +29,8 @@ export default function FlashcardApp() {
   const currentWord = queue[0];
 
   // --- Core Logic ---
-  const setInitialState = useEffectEvent((fetchedWords: VocabularyType[]) => {
+  const setInitialState = useEffectEvent(() => {
     // If progress hasn't loaded yet, don't set the state
-    console.log(progress, "progress");
     if (!progress) return;
 
     const savedMastered = progress.mastered_words || [];
@@ -54,7 +39,7 @@ export default function FlashcardApp() {
     // MongoDB might return strings, but rank is a number
     const savedMasteredNumbers = savedMastered.map(Number);
 
-    const allWordsInThisLevel = fetchedWords.filter(
+    const allWordsInThisLevel = wordsData.filter(
       (w) =>
         w.rank > (selectedLevel - 1) * wordsPerLevel &&
         w.rank <= selectedLevel * wordsPerLevel,
@@ -75,9 +60,9 @@ export default function FlashcardApp() {
 
   useEffect(() => {
     if (wordsData) {
-      setInitialState(wordsData);
+      setInitialState();
     }
-  }, [wordsData, progress, selectedLevel]);
+  }, [progress, selectedLevel, wordsData]);
 
   const markAsMastered = useCallback(
     (id: number) => {
@@ -124,7 +109,7 @@ export default function FlashcardApp() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isFlipped, currentWord, markAsMastered]);
 
-  if (isLoading || !wordsData) {
+  if (!wordsData) {
     return (
       <div className="min-h-screen bg-zinc-950 flex items-center justify-center w-full">
         <div className="w-10 h-10 border-4 border-amber-500 border-t-transparent rounded-full animate-spin" />

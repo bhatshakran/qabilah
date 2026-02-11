@@ -36,14 +36,13 @@ export async function POST(request: Request) {
       { expiresIn: "7d" },
     );
 
-    console.log(user, "user");
     const response = NextResponse.json({
       message: "Logged in",
       user: {
         id: user._id,
         email: user.email,
         name: user.name,
-        streakCount: user.streak_count,
+        streak_count: user.streak_count,
       },
     });
 
