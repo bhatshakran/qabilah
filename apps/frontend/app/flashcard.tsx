@@ -23,7 +23,7 @@ export default function FlashcardApp({ vocab }: { vocab: VocabularyType[] }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLevel, setSelectedLevel] = useState(1);
   const [isReviewMode, setIsReviewMode] = useState(false);
-  const { progress, syncMastery } = useUserProgress(user?.userId);
+  const { progress, syncMastery } = useUserProgress(user?.id);
   const masteredIds = progress?.mastered_words ?? [];
   const wordsPerLevel = 10;
   const currentWord = queue[0];

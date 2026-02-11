@@ -1,4 +1,6 @@
+import { useAuth } from "../contexts/authContext";
 import { View } from "../flashcard";
+import { useSigninPopup } from "../hooks/useSigninPopup";
 import { VocabularyType } from "../models/vocabulary";
 
 const Map = ({
@@ -16,6 +18,9 @@ const Map = ({
   setSelectedLevel: (level: number) => void;
   wordsData: VocabularyType[];
 }) => {
+  const { user } = useAuth();
+  useSigninPopup(user);
+
   return (
     <div className="w-full mx-auto p-8 select-none ">
       {/* Grid Container */}

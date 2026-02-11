@@ -1,13 +1,15 @@
 "use client";
 import Link from "next/link";
-import { useState } from "react";
 import SignInForm from "./forms/signin";
 import { createPortal } from "react-dom";
 import { useAuth } from "../contexts/authContext";
+import { useSignin } from "../contexts/signinContext";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const { user, loading, logout } = useAuth();
-  const [showSignin, setShowSignin] = useState(false);
+  const { showSignin, openSignin, closeSignin } = useSignin();
+  const router = useRouter();
   return (
     <div className="w-full flex items-center justify-between flex-wrap mb-10 pt-4 mx-auto px-4 gap-y-4">
       <Link href={"/"} className="flex items-center gap-3">
@@ -73,7 +75,7 @@ const Header = () => {
         ) : (
           <div
             className="px-4 py-2 text-sm font-medium hover:text-amber-600 transition-colors cursor-pointer"
-            onClick={() => setShowSignin(true)}
+            onClick={() => openSignin()}
           >
             Sign In
           </div>
@@ -87,14 +89,17 @@ const Header = () => {
             {/* 1. Dark Backdrop Overlay */}
             <div
               className="absolute inset-0 bg-zinc-950/60 backdrop-blur-sm transition-opacity"
-              onClick={() => setShowSignin(false)} // Close when clicking outside
+              onClick={() => closeSignin()} // Close when clicking outside
             />
 
             {/* 2. The Form Container */}
             <div className="relative w-full max-w-md animate-in fade-in zoom-in duration-200">
               {/* Close Button (Optional but recommended) */}
               <button
-                onClick={() => setShowSignin(false)}
+                onClick={() => {
+                  router.push("/");
+                  closeSignin();
+                }}
                 className="absolute -top-12 right-0 text-white/70 hover:text-white flex items-center gap-1 text-sm font-medium"
               >
                 Close <span className="text-xl">×</span>

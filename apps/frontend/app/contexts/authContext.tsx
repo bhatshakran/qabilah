@@ -7,10 +7,10 @@ import {
   ReactNode,
 } from "react";
 
-interface User {
+export interface User {
   name: string;
   email: string;
-  userId: string;
+  id: string;
   streak_count: number;
 }
 

@@ -1,4 +1,6 @@
+import { useAuth } from "../contexts/authContext";
 import { View } from "../flashcard";
+import { useSigninPopup } from "../hooks/useSigninPopup";
 
 const Result = ({
   setView,
@@ -15,7 +17,8 @@ const Result = ({
 }) => {
   // Logic: Are we at the literal end of the journey?
   const isGrandFinale = isLevelComplete && currentLevel === totalLevels;
-
+  const { user } = useAuth();
+  useSigninPopup(user);
   return (
     <div className="bg-zinc-950 text-white flex flex-col items-center justify-center p-6 text-center w-full max-w-md mx-auto animate-in fade-in zoom-in duration-500">
       {/* Dynamic Icon/Emoji Based on State */}

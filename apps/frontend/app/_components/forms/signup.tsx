@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Loader2, User, Mail, Lock } from "lucide-react";
+import { User, Mail, Lock } from "lucide-react";
 
 export default function SignUpForm() {
   const [formData, setFormData] = useState({

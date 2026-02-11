@@ -1,3 +1,5 @@
+import { useAuth } from "../contexts/authContext";
+import { useSigninPopup } from "../hooks/useSigninPopup";
 import { VocabularyType } from "../models/vocabulary";
 import Backside from "./backside";
 import FrontSide from "./frontside";
@@ -19,6 +21,8 @@ const Flashcard = ({
   currentWord: VocabularyType;
   isFlipped: boolean;
 }) => {
+  const { user } = useAuth();
+  useSigninPopup(user);
   return (
     <div
       onClick={() => setIsFlipped(!isFlipped)}

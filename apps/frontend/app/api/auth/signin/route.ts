@@ -30,11 +30,9 @@ export async function POST(request: Request) {
       );
     }
     // Create the Token (The "Passport")
-    const token = jwt.sign(
-      { userId: user._id, email: user.email },
-      JWT_SECRET,
-      { expiresIn: "7d" },
-    );
+    const token = jwt.sign({ id: user._id, email: user.email }, JWT_SECRET, {
+      expiresIn: "7d",
+    });
 
     const response = NextResponse.json({
       message: "Logged in",
