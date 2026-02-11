@@ -26,7 +26,6 @@ export default function Reader({ article }: { article: Article }) {
     theme: "dark",
     showEnglish: true,
   });
-  console.log(article, "article");
 
   const updateSettings = (newFields: Partial<ReaderSettings>) => {
     setSettings((prev) => ({ ...prev, ...newFields }));

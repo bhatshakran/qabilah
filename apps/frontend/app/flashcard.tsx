@@ -6,10 +6,12 @@ import ProgressBar from "./_components/progress_bar";
 import Result from "./_components/result";
 import LibraryView from "./_components/library_view";
 import Map from "./_components/map";
-import { useStreak } from "./contexts/streakContext";
 import { VocabularyType } from "./models/vocabulary";
 import useSWR from "swr";
 import { preload } from "swr";
+import { useUserProgress } from "./hooks/useUserProgress";
+import { useAuth } from "./contexts/authContext";
+import Flashcard from "./_components/flashcard";
 
 export type View = "map" | "cards" | "library";
 export const fetcher = <T,>(url: string): Promise<T> =>
@@ -25,26 +27,32 @@ export default function FlashcardApp() {
     revalidateOnReconnect: false,
     revalidateIfStale: false,
   });
+  const { user } = useAuth();
   const wordsData = response?.data;
   // const totalCount = response?.pagination.total;
   const [isFlipped, setIsFlipped] = useState(false);
-  const streakCtx = useStreak();
-  const [masteredIds, setMasteredIds] = useState<number[]>([]);
+  // const [masteredIds, setMasteredIds] = useState<number[]>([]);
   const [queue, setQueue] = useState<VocabularyType[]>([]);
   const [view, setView] = useState<View>("library");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedLevel, setSelectedLevel] = useState(1);
   const [isReviewMode, setIsReviewMode] = useState(false);
-
+  const { progress, syncMastery } = useUserProgress(user?.userId);
+  const masteredIds = progress?.mastered_words ?? [];
   const wordsPerLevel = 10;
   const currentWord = queue[0];
 
   // --- Core Logic ---
   const setInitialState = useEffectEvent((fetchedWords: VocabularyType[]) => {
-    const savedMastered = JSON.parse(
-      localStorage.getItem("mastered_words") || "[]",
-    );
-    setMasteredIds(savedMastered);
+    // If progress hasn't loaded yet, don't set the state
+    console.log(progress, "progress");
+    if (!progress) return;
+
+    const savedMastered = progress.mastered_words || [];
+
+    // Ensure we compare strings to strings or numbers to numbers
+    // MongoDB might return strings, but rank is a number
+    const savedMasteredNumbers = savedMastered.map(Number);
 
     const allWordsInThisLevel = fetchedWords.filter(
       (w) =>
@@ -53,7 +61,7 @@ export default function FlashcardApp() {
     );
 
     const unmastered = allWordsInThisLevel.filter(
-      (w) => !savedMastered.includes(w.rank),
+      (w) => !savedMasteredNumbers.includes(w.rank),
     );
 
     if (unmastered.length > 0) {
@@ -69,30 +77,20 @@ export default function FlashcardApp() {
     if (wordsData) {
       setInitialState(wordsData);
     }
-  }, [wordsData]);
+  }, [wordsData, progress, selectedLevel]);
 
   const markAsMastered = useCallback(
     (id: number) => {
       setIsFlipped(false);
       if (!isReviewMode) {
-        const newMastered = [...masteredIds, id];
-        setMasteredIds(newMastered);
-        localStorage.setItem("mastered_words", JSON.stringify(newMastered));
+        // Logic is now on the server!
+        syncMastery(id);
         setQueue((prev) => prev.slice(1));
-
-        const today = new Date().toISOString().split("T")[0];
-        const lastDate = localStorage.getItem("last_study_date");
-        if (lastDate !== today) {
-          const newStreak = streakCtx.streak + 1;
-          streakCtx.setStreak(newStreak);
-          localStorage.setItem("streak_count", newStreak.toString());
-          localStorage.setItem("last_study_date", today);
-        }
       } else {
         setQueue((prev) => prev.slice(1));
       }
     },
-    [isReviewMode, masteredIds, streakCtx],
+    [isReviewMode, syncMastery],
   );
 
   // --- Event Handlers (Stay the same) ---
@@ -183,29 +181,15 @@ export default function FlashcardApp() {
           }}
         />
       ) : (
-        <div
-          onClick={() => setIsFlipped(!isFlipped)}
-          className="relative w-full max-w-lg h-full max-h-[350px] cursor-pointer perspective-1000"
-        >
-          {isReviewMode && (
-            <div className="mb-4 px-4 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full inline-block">
-              <span className="text-blue-500 text-[10px] font-black uppercase tracking-widest text-center">
-                Reviewing Mastered Words
-              </span>
-            </div>
-          )}
-          <div
-            className={`relative w-full h-full min-h-[400px] transition-transform duration-500 transform-style-3d ${isFlipped ? "rotate-y-180" : ""}`}
-          >
-            <FrontSide currentWord={currentWord} />
-            <Backside
-              handleGood={handleGood}
-              handleAgain={handleAgain}
-              markAsMastered={markAsMastered}
-              currentWord={currentWord}
-            />
-          </div>
-        </div>
+        <Flashcard
+          currentWord={currentWord}
+          handleAgain={handleAgain}
+          handleGood={handleGood}
+          isFlipped={isFlipped}
+          isReviewMode={isReviewMode}
+          markAsMastered={markAsMastered}
+          setIsFlipped={setIsFlipped}
+        />
       )}
 
       {/* Bottom Navigation */}

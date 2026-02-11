@@ -3,11 +3,11 @@ import Header from "../_components/header";
 import FlashcardApp from "../flashcard";
 
 export default async function Library() {
-  const vocab = await fetch(`${process.env.BASE_URL}/api/vocabulary`, {
-    cache: "no-store",
-  }).then((res) => {
-    return res.json();
-  });
+  const vocab = await fetch(`${process.env.BASE_URL}/api/vocabulary`).then(
+    (res) => {
+      return res.json();
+    },
+  );
 
   return (
     <SWRConfig

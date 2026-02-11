@@ -20,7 +20,6 @@ export async function POST(
 
     await connectToDatabase();
     const { slug } = await context.params;
-    console.log("we wfw");
     console.log(
       {
         slug,

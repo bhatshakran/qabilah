@@ -10,6 +10,8 @@ import {
 interface User {
   name: string;
   email: string;
+  userId: string;
+  streakCount: number;
 }
 
 interface AuthContextType {
