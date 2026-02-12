@@ -1,28 +1,61 @@
+import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../contexts/authContext";
 import { useSigninPopup } from "../hooks/useSigninPopup";
-import { VocabularyType } from "../models/vocabulary";
 import Backside from "./backside";
 import FrontSide from "./frontside";
+import { useUserProgress } from "../hooks/useUserProgress";
+import { useVocabularyStore } from "@/stores/vocabularyStore";
 
-const Flashcard = ({
-  setIsFlipped,
-  isReviewMode,
-  handleAgain,
-  handleGood,
-  markAsMastered,
-  currentWord,
-  isFlipped,
-}: {
-  setIsFlipped: (val: boolean) => void;
-  isReviewMode: boolean;
-  handleAgain: VoidFunction;
-  handleGood: VoidFunction;
-  markAsMastered: (id: number) => void;
-  currentWord: VocabularyType;
-  isFlipped: boolean;
-}) => {
+const Flashcard = () => {
+  const [isFlipped, setIsFlipped] = useState(false);
   const { user } = useAuth();
+  const { syncMastery } = useUserProgress(user ? user.id : null);
+  const { isReviewMode, setQueue, queue } = useVocabularyStore();
+  const currentWord = queue[0];
+  const markAsMastered = useCallback(
+    (id: number) => {
+      setIsFlipped(false);
+      if (!isReviewMode) {
+        // Logic is now on the server!
+        syncMastery(id);
+        setQueue((prev) => prev.slice(1));
+      } else {
+        setQueue((prev) => prev.slice(1));
+      }
+    },
+    [isReviewMode, syncMastery, setQueue],
+  );
   useSigninPopup(user);
+  // --- Event Handlers (Stay the same) ---
+  const handleAgain = () => {
+    setIsFlipped(false);
+    setQueue((prev) => {
+      const [first, ...rest] = prev;
+      return [...rest, first];
+    });
+  };
+
+  const handleGood = () => {
+    setIsFlipped(false);
+    setQueue((prev) => prev.slice(1));
+  };
+  // Keyboard support remains same...
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!currentWord) return;
+      if (e.code === "Space") {
+        e.preventDefault();
+        setIsFlipped((v) => !v);
+      }
+      if (isFlipped) {
+        if (e.key === "1") handleAgain();
+        if (e.key === "2") handleGood();
+        if (e.key === "3") markAsMastered(currentWord.rank);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isFlipped, currentWord, markAsMastered]);
   return (
     <div
       onClick={() => setIsFlipped(!isFlipped)}

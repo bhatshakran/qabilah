@@ -9,7 +9,7 @@ import { useUserProgress } from "../hooks/useUserProgress";
 
 const Header = () => {
   const { user, loading, logout } = useAuth();
-  const { progress } = useUserProgress(user?.id);
+  const { progress } = useUserProgress(user ? user.id : null);
   const { showSignin, openSignin, closeSignin } = useSignin();
   const router = useRouter();
   return (

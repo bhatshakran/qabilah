@@ -1,31 +1,22 @@
+import { useVocabularyStore } from "@/stores/vocabularyStore";
 import { useAuth } from "../contexts/authContext";
-import { View } from "../flashcard";
 import { useSigninPopup } from "../hooks/useSigninPopup";
-import { VocabularyType } from "../models/vocabulary";
 
-const Map = ({
-  setView,
-  totalLevels,
-  wordsPerLevel,
-  masteredIds,
-  setSelectedLevel,
-  wordsData,
-}: {
-  setView: (view: View) => void;
-  totalLevels: number;
-  wordsPerLevel: number;
-  masteredIds: number[];
-  setSelectedLevel: (level: number) => void;
-  wordsData: VocabularyType[];
-}) => {
+const Map = () => {
   const { user } = useAuth();
   useSigninPopup(user);
+  const getDerivedStats = useVocabularyStore((s) => s.getDerivedStats);
+  const wordsData = useVocabularyStore((s) => s.wordsData);
+  const masteredIds = useVocabularyStore((s) => s.masteredIds);
+  const wordsPerLevel = useVocabularyStore((s) => s.wordsPerLevel);
+  const setSelectedLevel = useVocabularyStore((s) => s.setSelectedLevel);
+  const setView = useVocabularyStore((s) => s.setView);
 
   return (
     <div className="w-full mx-auto p-8 select-none ">
       {/* Grid Container */}
       <div className="grid grid-cols-4 gap-y-20 gap-x-4 relative">
-        {Array.from({ length: totalLevels }, (_, i) => {
+        {Array.from({ length: getDerivedStats().totalLevels }, (_, i) => {
           const level = i + 1;
 
           // Data Calculation
@@ -56,7 +47,7 @@ const Map = ({
           return (
             <div key={level} className="relative flex flex-col items-center">
               {/* Horizontal Connector Line (Only between items in the same row) */}
-              {(i + 1) % 5 !== 0 && i !== totalLevels - 1 && (
+              {(i + 1) % 5 !== 0 && i !== getDerivedStats().totalLevels - 1 && (
                 <div className="absolute top-1/2 left-[70%] w-full h-px bg-zinc-900 -z-10" />
               )}
 

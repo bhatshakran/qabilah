@@ -1,7 +1,8 @@
 import { useState } from "react";
 import ArticleList from "./article_list";
 import { VocabularyType } from "../models/vocabulary";
-import { View } from "../flashcard";
+import { View } from "../flashcards";
+import { useVocabularyStore } from "@/stores/vocabularyStore";
 
 const VocabLibrary = ({
   wordsData,
@@ -79,17 +80,13 @@ const VocabLibrary = ({
 };
 
 const LibraryView = ({
-  searchQuery,
-  setSearchQuery,
   wordsData,
   masteredIds,
 }: {
-  setView: (view: View) => void;
-  searchQuery: string;
-  setSearchQuery: (q: string) => void;
   wordsData: VocabularyType[];
   masteredIds: number[];
 }) => {
+  const { searchQuery, setSearchQuery } = useVocabularyStore();
   const [activeTab, setActiveTab] = useState<"vocab" | "articles">("articles");
 
   return (

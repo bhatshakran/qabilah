@@ -1,23 +1,23 @@
+import { useVocabularyStore } from "@/stores/vocabularyStore";
 import { useAuth } from "../contexts/authContext";
-import { View } from "../flashcard";
 import { useSigninPopup } from "../hooks/useSigninPopup";
 
 const Result = ({
-  setView,
   isLevelComplete,
   currentLevel,
-  onNextLevel,
   totalLevels,
 }: {
-  setView: (view: View) => void;
   isLevelComplete: boolean;
   currentLevel: number;
-  onNextLevel: () => void;
   totalLevels: number;
 }) => {
   // Logic: Are we at the literal end of the journey?
   const isGrandFinale = isLevelComplete && currentLevel === totalLevels;
   const { user } = useAuth();
+  const selectedLevel = useVocabularyStore((s) => s.selectedLevel);
+  const setSelectedLevel = useVocabularyStore((s) => s.setSelectedLevel);
+  const setView = useVocabularyStore((s) => s.setView);
+
   useSigninPopup(user);
   return (
     <div className="bg-zinc-950 text-white flex flex-col items-center justify-center p-6 text-center w-full max-w-md mx-auto animate-in fade-in zoom-in duration-500">
@@ -61,7 +61,7 @@ const Result = ({
           isLevelComplete && (
             /* Move to Next Level */
             <button
-              onClick={onNextLevel}
+              onClick={() => setSelectedLevel(selectedLevel + 1)}
               className="w-full py-5 bg-amber-500 text-black font-black rounded-2xl transition-all active:scale-95 shadow-xl shadow-amber-500/20"
             >
               UNLOCK LEVEL {currentLevel + 1}

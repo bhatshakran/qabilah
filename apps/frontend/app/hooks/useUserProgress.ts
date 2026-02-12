@@ -1,7 +1,7 @@
 // hooks/useUserProgress.ts
 import useSWR from "swr";
 
-export function useUserProgress(userId?: string) {
+export function useUserProgress(userId: string | null) {
   const { data, mutate } = useSWR<{
     streak_count: number;
     mastered_words: number[];
