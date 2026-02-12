@@ -24,7 +24,7 @@ export function useUserProgress(userId?: string) {
     mutate(optimisticData, false);
 
     // 2. Real Update: Send to MongoDB
-    const response = await fetch("/api/user/sync", {
+    await fetch("/api/user/sync", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ userId, wordId }),

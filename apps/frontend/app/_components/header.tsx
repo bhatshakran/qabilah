@@ -5,9 +5,11 @@ import { createPortal } from "react-dom";
 import { useAuth } from "../contexts/authContext";
 import { useSignin } from "../contexts/signinContext";
 import { useRouter } from "next/navigation";
+import { useUserProgress } from "../hooks/useUserProgress";
 
 const Header = () => {
   const { user, loading, logout } = useAuth();
+  const { progress } = useUserProgress(user?.id);
   const { showSignin, openSignin, closeSignin } = useSignin();
   const router = useRouter();
   return (
@@ -35,13 +37,13 @@ const Header = () => {
 
       <div className="flex items-center gap-6">
         {/* Streak Counter */}
-        {user && (
+        {progress && (
           <div className="flex items-center">
             <div
-              className={`flex items-center gap-2 px-4 py-2 rounded-2xl border transition-all ${user.streak_count > 0 ? "bg-orange-500/10 border-orange-500/30" : "bg-zinc-900 border-zinc-800"}`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-2xl border transition-all ${progress.streak_count > 0 ? "bg-orange-500/10 border-orange-500/30" : "bg-zinc-900 border-zinc-800"}`}
             >
               <span
-                className={`text-xl ${user.streak_count > 0 ? "" : "grayscale"}`}
+                className={`text-xl ${progress.streak_count > 0 ? "" : "grayscale"}`}
               >
                 🔥
               </span>
@@ -50,9 +52,10 @@ const Header = () => {
                   Streak
                 </span>
                 <span
-                  className={`text-sm font-black ${user.streak_count > 0 ? "text-orange-500" : "text-zinc-400"}`}
+                  className={`text-sm font-black ${progress.streak_count > 0 ? "text-orange-500" : "text-zinc-400"}`}
                 >
-                  {user.streak_count} {user.streak_count === 1 ? "Day" : "Days"}
+                  {progress.streak_count}{" "}
+                  {progress.streak_count === 1 ? "Day" : "Days"}
                 </span>
               </div>
             </div>{" "}
