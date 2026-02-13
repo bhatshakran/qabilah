@@ -26,9 +26,6 @@ importers:
       framer-motion:
         specifier: ^12.33.0
         version: 12.34.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      frontend:
-        specifier: 'link:'
-        version: 'link:'
       groq-sdk:
         specifier: ^0.37.0
         version: 0.37.0
