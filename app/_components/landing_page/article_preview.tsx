@@ -1,8 +1,8 @@
 import { Book, Clock } from "lucide-react";
-import { Article as ArticleType } from "@/app/_components/article_list";
+import { DocumentDTO } from "@/app/_components/article_list";
 import Link from "next/link";
 
-function ArticlePreview({ article }: { article: ArticleType }) {
+function ArticlePreview({ article }: { article: DocumentDTO }) {
   return (
     <Link href={`/read/${article.slug}`} className="group">
       <div className="h-full bg-zinc-900/30 border border-zinc-800/50 rounded-3xl p-6 transition-all group-hover:bg-zinc-900 group-hover:border-amber-500/30">

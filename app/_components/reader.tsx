@@ -25,6 +25,12 @@ export default function Reader({
   const [activeBlock, setActiveBlock] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [tab, setTab] = useState<"notebook" | "halaqa">("notebook");
+  const [pageIndex, setPageIndex] = useState(0);
+  console.log(readerDocument);
+  const isMultiPage = readerDocument.category === "risalah";
+  const totalPages = readerDocument.structure.length;
+  const currentPage = readerDocument.structure[pageIndex];
+
   const [popoverData, setPopoverData] = useState<{
     word: string;
     pos: { top: number; left: number };
@@ -46,6 +52,18 @@ export default function Reader({
     light: "bg-zinc-50 text-zinc-900",
     sepia: "bg-[#f4ecd8] text-[#5b4636]",
   };
+  const nextPage = () => {
+    setPageIndex((p) => Math.min(p + 1, totalPages - 1));
+  };
+
+  const prevPage = () => {
+    setPageIndex((p) => Math.max(p - 1, 0));
+  };
+  useEffect(() => {
+    setActiveBlock(null);
+    setSidebarOpen(false);
+    setSelectedTokenKey(null);
+  }, [pageIndex]);
 
   const handleTokenClick = (
     e: React.MouseEvent,
@@ -77,6 +95,17 @@ export default function Reader({
     window.addEventListener("scroll", handleScroll, true); // Use capture phase
     return () => window.removeEventListener("scroll", handleScroll, true);
   }, [popoverData]);
+  useEffect(() => {
+    const handler = (e: KeyboardEvent) => {
+      if (!isMultiPage) return;
+
+      if (e.key === "ArrowRight") nextPage();
+      if (e.key === "ArrowLeft") prevPage();
+    };
+
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [isMultiPage, pageIndex]);
 
   return (
     <div
@@ -112,6 +141,30 @@ export default function Reader({
         updateSettings={updateSettings}
       />
       <header className="sticky top-0 z-10 w-full bg-zinc-950 border-b border-zinc-800 py-4">
+        {isMultiPage && (
+          <div className="flex items-center justify-between py-4 text-sm text-zinc-500">
+            <button
+              onClick={prevPage}
+              disabled={pageIndex === 0}
+              className="px-3 py-1 rounded bg-zinc-800 disabled:opacity-30"
+            >
+              ← Previous
+            </button>
+
+            <div className="font-mono text-xs tracking-wider">
+              Page {pageIndex + 1} / {totalPages}
+            </div>
+
+            <button
+              onClick={nextPage}
+              disabled={pageIndex === totalPages - 1}
+              className="px-3 py-1 rounded bg-zinc-800 disabled:opacity-30"
+            >
+              Next →
+            </button>
+          </div>
+        )}
+
         <div className="w-full flex items-center">
           {/* Left Section: Command Cluster */}
           <div className="flex items-center gap-4 justify-between grow">
@@ -184,14 +237,16 @@ export default function Reader({
         <div className="absolute bottom-0 left-0 h-[3px] bg-zinc-900 w-full">
           <div
             className="h-full bg-amber-600 transition-all duration-500 ease-out shadow-[0_0_12px_rgba(217,119,6,0.4)]"
-            style={{ width: "42%" }}
+            style={{
+              width: `${((pageIndex + 1) / totalPages) * 100}%`,
+            }}
           />
         </div>
       </header>
 
       {/* ---------- ARTICLE BODY ---------- */}
       <div className="space-y-12">
-        {readerDocument.structure[0].paragraphs.map((p) => (
+        {currentPage.paragraphs.map((p) => (
           <div key={p.paragraphIndex} className="space-y-8">
             {p.sentences.map((s) => (
               <div
