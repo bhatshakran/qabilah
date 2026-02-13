@@ -1,6 +1,6 @@
-import Header from "frontend/app/_components/header";
-import FlashcardApp from "frontend/app/flashcards";
-import { getVocabulary } from "frontend/app/lib/vocabulary";
+import Header from "@/app/_components/header";
+import FlashcardApp from "@/app/flashcards";
+import { getVocabulary } from "@/app/lib/vocabulary";
 
 export default async function Library() {
   const data = await getVocabulary();

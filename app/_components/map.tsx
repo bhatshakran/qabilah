@@ -1,6 +1,6 @@
 import { useVocabularyStore } from "@/stores/vocabularyStore";
-import { useAuth } from "frontend/app/contexts/authContext";
-import { useSigninPopup } from "frontend/app/hooks/useSigninPopup";
+import { useAuth } from "@/app/contexts/authContext";
+import { useSigninPopup } from "@/app/hooks/useSigninPopup";
 
 const Map = () => {
   const { user } = useAuth();

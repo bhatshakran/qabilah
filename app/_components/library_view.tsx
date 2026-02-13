@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ArticleList from "frontend/app/_components/article_list";
+import ArticleList from "@/app/_components/article_list";
 import { useVocabularyStore } from "@/stores/vocabularyStore";
 import { VocabularyDTO } from "@/types/vocabulary";
 

@@ -1,9 +1,9 @@
 "use client";
 import { MessageSquare, BookOpen, X, Heart, Send, Loader2 } from "lucide-react";
-import { useAuth } from "frontend/app/contexts/authContext";
+import { useAuth } from "@/app/contexts/authContext";
 import { useEffect, useState } from "react";
-import { Comment } from "frontend/app/models/comment";
-import { Note } from "frontend/app/models/note";
+import { Comment } from "@/app/models/comment";
+import { Note } from "@/app/models/note";
 
 interface SidebarProps {
   isOpen: boolean;

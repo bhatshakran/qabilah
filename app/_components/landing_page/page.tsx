@@ -1,10 +1,10 @@
-import FeatureGrid from "frontend/app/_components/feature_grid/page";
-import ArticlePreview from "frontend/app/_components/landing_page/article_preview";
-import Hero from "frontend/app/_components/landing_page/hero";
+import FeatureGrid from "@/app/_components/feature_grid/page";
+import ArticlePreview from "@/app/_components/landing_page/article_preview";
+import Hero from "@/app/_components/landing_page/hero";
 import Article from "@/app/models/document";
 import connectToDatabase from "@/app/lib/connection";
-import Footer from "frontend/app/_components/landing_page/footer";
-import Header from "frontend/app/_components/header";
+import Footer from "@/app/_components/landing_page/footer";
+import Header from "@/app/_components/header";
 
 const LandingPage = async () => {
   await connectToDatabase();

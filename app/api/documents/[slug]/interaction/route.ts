@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import jwt from "jsonwebtoken";
-import connectToDatabase from "frontend/app/lib/connection";
-import Comment from "frontend/app/models/comment";
-import Note from "frontend/app/models/note";
+import connectToDatabase from "@/app/lib/connection";
+import Comment from "@/app/models/comment";
+import Note from "@/app/models/note";
 
 export async function POST(
   request: Request,

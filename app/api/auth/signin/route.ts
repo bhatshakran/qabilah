@@ -1,8 +1,8 @@
 // src/app/api/auth/signin/route.ts
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import connectToDatabase from "frontend/app/lib/connection";
-import User from "frontend/app/models/user";
+import connectToDatabase from "@/app/lib/connection";
+import User from "@/app/models/user";
 import jwt from "jsonwebtoken";
 const JWT_SECRET = process.env.JWT_SECRET || "your_super_secret_tribe_key";
 

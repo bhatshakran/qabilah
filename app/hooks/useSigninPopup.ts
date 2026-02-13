@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { useSignin } from "frontend/app/contexts/signinContext";
-import { User } from "frontend/app/contexts/authContext";
+import { useSignin } from "@/app/contexts/signinContext";
+import { User } from "@/app/contexts/authContext";
 
 export function useSigninPopup(user: User | null) {
   const { openSignin, closeSignin } = useSignin();

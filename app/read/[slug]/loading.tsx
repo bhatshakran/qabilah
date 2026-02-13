@@ -1,4 +1,4 @@
-import LoadingPage from "frontend/app/_components/loader";
+import LoadingPage from "@/app/_components/loader";
 
 const Loading = () => {
   return <LoadingPage />;

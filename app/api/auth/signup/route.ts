@@ -1,8 +1,8 @@
 // src/app/api/auth/signup/route.ts
-import { NextResponse } from 'next/server';
-import bcrypt from 'bcryptjs';
-import connectToDatabase from 'frontend/app/lib/connection';
-import User from 'frontend/app/models/user';
+import { NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import connectToDatabase from "@/app/lib/connection";
+import User from "@/app/models/user";
 
 export async function POST(request: Request) {
   try {
@@ -14,8 +14,8 @@ export async function POST(request: Request) {
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return NextResponse.json(
-        { message: 'User already exists' },
-        { status: 400 }
+        { message: "User already exists" },
+        { status: 400 },
       );
     }
 
@@ -31,12 +31,12 @@ export async function POST(request: Request) {
 
     console.log(newUser);
 
-    return NextResponse.json({ message: 'User created!' }, { status: 201 });
+    return NextResponse.json({ message: "User created!" }, { status: 201 });
   } catch (error) {
     console.log(error);
     return NextResponse.json(
-      { message: 'Internal Server Error' },
-      { status: 500 }
+      { message: "Internal Server Error" },
+      { status: 500 },
     );
   }
 }

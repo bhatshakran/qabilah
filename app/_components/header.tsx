@@ -1,11 +1,11 @@
 "use client";
 import Link from "next/link";
-import SignInForm from "frontend/app/_components/forms/signin";
+import SignInForm from "@/app/_components/forms/signin";
 import { createPortal } from "react-dom";
-import { useAuth } from "frontend/app/contexts/authContext";
-import { useSignin } from "frontend/app/contexts/signinContext";
+import { useAuth } from "@/app/contexts/authContext";
+import { useSignin } from "@/app/contexts/signinContext";
 import { useRouter } from "next/navigation";
-import { useUserProgress } from "frontend/app/hooks/useUserProgress";
+import { useUserProgress } from "@/app/hooks/useUserProgress";
 
 const Header = () => {
   const { user, loading, logout } = useAuth();
