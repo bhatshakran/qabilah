@@ -16,7 +16,6 @@
     "cheerio": "^1.2.0",
     "dotenv": "^17.2.4",
     "framer-motion": "^12.33.0",
-    "frontend": "link:",
     "groq-sdk": "^0.37.0",
     "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.563.0",

@@ -29,94 +29,6 @@ importers:
       frontend:
         specifier: 'link:'
         version: 'link:'
-      grok-sdk:
-        specifier: 0.0.1-security
-        version: 0.0.1-security
-      groq-sdk:
-        specifier: ^0.37.0
-        version: 0.37.0
-      jsonwebtoken:
-        specifier: ^9.0.3
-        version: 9.0.3
-      lucide-react:
-        specifier: ^0.563.0
-        version: 0.563.0(react@19.2.3)
-      mongodb:
-        specifier: ^7.1.0
-        version: 7.1.0
-      mongoose:
-        specifier: ^9.1.6
-        version: 9.2.0
-      next:
-        specifier: 16.1.6
-        version: 16.1.6(@babel/core@7.29.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      node-fetch:
-        specifier: ^3.3.2
-        version: 3.3.2
-      react:
-        specifier: 19.2.3
-        version: 19.2.3
-      react-dom:
-        specifier: 19.2.3
-        version: 19.2.3(react@19.2.3)
-      slugify:
-        specifier: ^1.6.6
-        version: 1.6.6
-      swr:
-        specifier: ^2.4.0
-        version: 2.4.0(react@19.2.3)
-      zustand:
-        specifier: ^5.0.11
-        version: 5.0.11(@types/react@19.2.13)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3))
-    devDependencies:
-      '@tailwindcss/postcss':
-        specifier: ^4
-        version: 4.1.18
-      '@types/node':
-        specifier: ^20
-        version: 20.19.33
-      '@types/react':
-        specifier: ^19
-        version: 19.2.13
-      '@types/react-dom':
-        specifier: ^19
-        version: 19.2.3(@types/react@19.2.13)
-      eslint:
-        specifier: ^9
-        version: 9.39.2(jiti@2.6.1)
-      eslint-config-next:
-        specifier: 16.1.6
-        version: 16.1.6(@typescript-eslint/parser@8.55.0(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3))(eslint@9.39.2(jiti@2.6.1))(typescript@5.9.3)
-      tailwindcss:
-        specifier: ^4
-        version: 4.1.18
-      typescript:
-        specifier: ^5
-        version: 5.9.3
-
-  apps/frontend:
-    dependencies:
-      '@types/bcryptjs':
-        specifier: ^3.0.0
-        version: 3.0.0
-      '@types/jsonwebtoken':
-        specifier: ^9.0.10
-        version: 9.0.10
-      bcryptjs:
-        specifier: ^3.0.3
-        version: 3.0.3
-      cheerio:
-        specifier: ^1.2.0
-        version: 1.2.0
-      dotenv:
-        specifier: ^17.2.4
-        version: 17.2.4
-      framer-motion:
-        specifier: ^12.33.0
-        version: 12.34.0(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
-      frontend:
-        specifier: 'link:'
-        version: 'link:'
       groq-sdk:
         specifier: ^0.37.0
         version: 0.37.0
@@ -1435,9 +1347,6 @@ packages:
 
   graceful-fs@4.2.11:
     resolution: {integrity: sha512-RbJ5/jmFcNNCcDV5o9eTnBLJ/HszWV0P73bc+Ff4nS/rJj+YaS6IGyiOL0VoBYX+l1Wrl3k63h/KrH+nhJ0XvQ==}
-
-  grok-sdk@0.0.1-security:
-    resolution: {integrity: sha512-RCXCYNbs+ndTHGyd6kENFyyQh+Guo+u4CDYn32Tg0YRvJ4TnrjmeEOQJC9OnMAmS4y6TJJ/m+0kdZLE8F1zzig==}
 
   groq-sdk@0.37.0:
     resolution: {integrity: sha512-lT72pcT8b/X5XrzdKf+rWVzUGW1OQSKESmL8fFN5cTbsf02gq6oFam4SVeNtzELt9cYE2Pt3pdGgSImuTbHFDg==}
@@ -3860,8 +3769,6 @@ snapshots:
   gopd@1.2.0: {}
 
   graceful-fs@4.2.11: {}
-
-  grok-sdk@0.0.1-security: {}
 
   groq-sdk@0.37.0:
     dependencies:
