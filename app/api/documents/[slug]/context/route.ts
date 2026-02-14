@@ -20,10 +20,10 @@ export async function GET(
 
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET!) as {
-        userId: string;
+        id: string;
       };
 
-      userId = decoded.userId;
+      userId = decoded.id;
     }
 
     const publicComments = await Comment.find({ slug }).sort({

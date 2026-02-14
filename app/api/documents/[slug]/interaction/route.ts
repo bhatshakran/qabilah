@@ -78,12 +78,10 @@ export async function PATCH(request: Request) {
     const updatedNote = await Note.findOneAndUpdate(
       { _id: id, userId: decoded.id },
       { content, updatedAt: new Date() },
-      { new: true },
+      { returnDocument: "after" },
     );
-
     if (!updatedNote)
       return NextResponse.json({ message: "Note not found" }, { status: 404 });
-
     return NextResponse.json(updatedNote);
   } catch (error) {
     console.log(error);
