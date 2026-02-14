@@ -3,7 +3,7 @@ import { VocabularyDTO } from "@/types/vocabulary";
 import { create } from "zustand";
 
 export type View = "map" | "cards" | "library";
-
+export type Theme = "dark" | "sepia" | "light";
 interface VocabularyState {
   // State
   queue: VocabularyDTO[]; // Replace 'any' with your VocabularyDTO
@@ -14,6 +14,7 @@ interface VocabularyState {
   wordsData: VocabularyDTO[];
   masteredIds: number[];
   wordsPerLevel: number;
+  theme: Theme;
 
   // Actions
   setQueue: (queue: VocabularyDTO[]) => void;
@@ -24,6 +25,7 @@ interface VocabularyState {
   setSearchQuery: (query: string) => void;
   setWordsData: (data: VocabularyDTO[]) => void;
   setMasteredIds: (ids: number[]) => void;
+  setTheme: (theme: Theme) => void;
   // Derived Logic (Getters)
   getDerivedStats: () => {
     totalLevels: number;
@@ -43,6 +45,7 @@ export const useVocabularyStore = create<VocabularyState>((set, get) => ({
   masteredIds: [],
   selectedLevel: 1,
   wordsPerLevel: 10,
+  theme: "dark",
 
   setQueue: (queue) => set({ queue }),
 
@@ -50,6 +53,7 @@ export const useVocabularyStore = create<VocabularyState>((set, get) => ({
     set((state) => ({
       queue: state.queue.slice(1),
     })),
+  setTheme: (theme) => set({ theme }),
 
   setView: (view) => set({ view }),
 

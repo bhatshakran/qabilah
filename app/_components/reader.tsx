@@ -42,11 +42,41 @@ export default function Reader({
     setSettings((prev) => ({ ...prev, ...newFields }));
   };
 
-  const themeClasses = {
-    dark: "bg-zinc-950 text-zinc-100",
-    light: "bg-zinc-50 text-zinc-900",
-    sepia: "bg-[#f4ecd8] text-[#5b4636]",
-  };
+  const THEMES = {
+    dark: {
+      page: "bg-zinc-950 text-zinc-100",
+      border: "border-zinc-800",
+      english: "text-zinc-400 border-zinc-800",
+
+      button: {
+        base: "bg-zinc-900 text-zinc-400 border-zinc-800",
+        hover: "hover:bg-zinc-800 hover:text-white hover:border-zinc-600",
+      },
+    },
+    light: {
+      page: "bg-zinc-50 text-zinc-900",
+      border: "border-zinc-200",
+      english: "text-zinc-500 border-zinc-200",
+
+      button: {
+        base: "bg-white text-zinc-500 border-zinc-200",
+        hover: "hover:bg-zinc-100 hover:text-zinc-900 hover:border-zinc-300",
+      },
+    },
+    sepia: {
+      page: "bg-[#f4ecd8] text-[#5b4636]",
+      border: "border-[#e2d3b4]",
+      english: "text-[#8a6f5a] border-[#e2d3b4]",
+
+      button: {
+        base: "bg-[#f8f1df] text-[#8a6f5a] border-[#e2d3b4]",
+        hover: "hover:bg-[#efe4c9] hover:text-[#5b4636] hover:border-[#d8c7a4]",
+      },
+    },
+  } as const;
+
+  const theme = THEMES[settings.theme];
+
   const nextPage = () => {
     setPageIndex((p) => Math.min(p + 1, totalPages - 1));
   };
@@ -104,7 +134,7 @@ export default function Reader({
 
   return (
     <div
-      className={`w-full max-w-4xl relative mx-auto mt-6 space-y-10 pb-40 px-4 transition-colors duration-500 ${themeClasses[settings.theme]}`}
+      className={`w-full max-w-4xl relative mx-auto mt-6 space-y-10 pb-40 px-4 transition-colors duration-500 ${theme.page}`}
     >
       <ArticleSidebar
         activeBlock={activeBlock}
@@ -135,13 +165,15 @@ export default function Reader({
         settings={settings}
         updateSettings={updateSettings}
       />
-      <header className="sticky top-0 z-10 w-full bg-zinc-950 border-b border-zinc-800 py-4">
+      <header
+        className={`sticky top-0 z-10 w-full border-b  py-4 ${theme.border} ${theme.page}`}
+      >
         {isMultiPage && (
           <div className="flex items-center justify-between py-4 text-sm text-zinc-500">
             <button
               onClick={prevPage}
               disabled={pageIndex === 0}
-              className="px-3 py-1 rounded bg-zinc-800 disabled:opacity-30"
+              className={`px-3 py-1 rounded ${theme.page} disabled:opacity-30`}
             >
               ← Previous
             </button>
@@ -153,7 +185,7 @@ export default function Reader({
             <button
               onClick={nextPage}
               disabled={pageIndex === totalPages - 1}
-              className="px-3 py-1 rounded bg-zinc-800 disabled:opacity-30"
+              className={`px-3 py-1 rounded ${theme.page} disabled:opacity-30`}
             >
               Next →
             </button>
@@ -165,11 +197,9 @@ export default function Reader({
           <div className="flex items-center gap-4 justify-between grow">
             <button
               onClick={() => setIsSettingsOpen(true)}
-              className="group flex items-center justify-center sm:w-10 sm:h-10 
-             rounded-lg border border-zinc-800 bg-zinc-900 
-             text-zinc-500 hover:text-white hover:border-zinc-600 
-             hover:bg-zinc-800 transition-all duration-200 
-             active:scale-95 shadow-lg"
+              className={`group flex items-center justify-center sm:w-10 sm:h-10
+                rounded-lg border ${theme.button.base} ${theme.button.hover}
+                transition-all duration-200 active:scale-95 shadow-lg`}
             >
               <svg
                 width="18"
@@ -203,11 +233,11 @@ export default function Reader({
           {/* Exit Action */}
           <div className="flex items-center pl-4 border-zinc-800">
             <button
-              className="p-2 text-zinc-600 hover:text-zinc-100 transition-colors group"
+              className="p-2 text-zinc-600 group cursor-pointer"
               onClick={() => window.history.back()}
               aria-label="Back to Map"
             >
-              <span className="text-[10px] uppercase tracking-widest font-bold mr-2 hidden md:inline-block opacity-80 group-hover:opacity-100 transition-opacity">
+              <span className="text-[10px] uppercase tracking-widest font-bold mr-2 hidden md:inline-block group-hover:scale-105">
                 Exit Reader
               </span>
               <svg
@@ -219,7 +249,7 @@ export default function Reader({
                 strokeWidth="2.5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="inline-block"
+                className="inline-block group-hover:scale-105"
               >
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
@@ -303,7 +333,9 @@ export default function Reader({
 
                 {/* English - Toggleable */}
                 {s.en && settings.showEnglish && (
-                  <div className="mt-4 text-sm text-zinc-500 border-l-2 border-zinc-800 pl-4 py-1 italic">
+                  <div
+                    className={`mt-4 text-sm border-l-2 pl-4 py-1 italic ${theme.english}`}
+                  >
                     {s.en}
                   </div>
                 )}
