@@ -16,6 +16,7 @@ export async function POST(
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
+    console.log(decoded, "decoded");
     const { type, sentenceIndex, content, authorName } = await request.json();
 
     await connectToDatabase();
@@ -24,7 +25,7 @@ export async function POST(
       {
         slug,
         sentenceIndex,
-        userId: decoded.userId,
+        userId: decoded.id,
         authorName: authorName || "Anonymous Warrior",
         content,
       },
@@ -34,7 +35,7 @@ export async function POST(
       const newComment = await Comment.create({
         slug,
         sentenceIndex,
-        userId: decoded.userId,
+        userId: decoded.id,
         authorName: authorName || "Anonymous Warrior",
         content,
       });
@@ -45,7 +46,7 @@ export async function POST(
       const newNote = await Note.create({
         slug,
         sentenceIndex,
-        userId: decoded.userId,
+        userId: decoded.id,
         content,
       });
       return NextResponse.json(newNote);
@@ -75,7 +76,7 @@ export async function PATCH(request: Request) {
 
     // Ensure the note belongs to the user
     const updatedNote = await Note.findOneAndUpdate(
-      { _id: id, userId: decoded.userId },
+      { _id: id, userId: decoded.id },
       { content, updatedAt: new Date() },
       { new: true },
     );
@@ -104,7 +105,7 @@ export async function DELETE(request: Request) {
 
     const deletedNote = await Note.findOneAndDelete({
       _id: noteId,
-      userId: decoded.userId,
+      userId: decoded.id,
     });
 
     if (!deletedNote)
