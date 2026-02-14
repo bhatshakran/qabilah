@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import SignUpForm from "@/app/_components/forms/signup";
+import SignUpForm from "@/components/forms/signup";
 import { Loader2, Lock, Mail } from "lucide-react";
 import { useAuth } from "@/app/contexts/authContext";
 

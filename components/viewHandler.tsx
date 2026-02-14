@@ -1,8 +1,8 @@
 import { useVocabularyStore } from "@/stores/vocabularyStore";
-import Map from "@/app/_components/map";
-import LibraryView from "@/app/_components/library_view";
-import Result from "@/app/_components/result";
-import Flashcard from "@/app/_components/flashcard";
+import Map from "@/components/map";
+import LibraryView from "@/components/library_view";
+import Result from "@/components/result";
+import Flashcard from "@/components/flashcard";
 
 const ViewHandler = () => {
   // 1. Get everything from the store (Atomic Selectors for performance)

@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import SignInForm from "@/app/_components/forms/signin";
+import SignInForm from "@/components/forms/signin";
 import { createPortal } from "react-dom";
 import { useAuth } from "@/app/contexts/authContext";
 import { useSignin } from "@/app/contexts/signinContext";

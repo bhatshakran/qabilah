@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import SettingsPane, { ReaderSettings } from "@/app/_components/settings_pane";
-import { DocumentDTO, Sentence, Token } from "@/app/_components/article_list";
-import WordPopover from "@/app/_components/wordPopover";
+import SettingsPane, { ReaderSettings } from "@/components/settings_pane";
+import { DocumentDTO, Sentence, Token } from "@/components/articleList";
+import WordPopover from "@/components/wordPopover";
 import { createPortal } from "react-dom";
 import { BookOpen, MessageSquare } from "lucide-react";
-import ArticleSidebar from "@/app/_components/article_sidebar";
+import ArticleSidebar from "@/components/articleSidebar";
 import { useAuth } from "@/app/contexts/authContext";
 
 export default function Reader({

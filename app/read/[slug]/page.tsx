@@ -1,4 +1,4 @@
-import Reader from "@/app/_components/reader";
+import Reader from "@/components/reader";
 export default async function Page({
   params,
 }: {

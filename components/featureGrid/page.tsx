@@ -1,7 +1,7 @@
-import HistoryTile from "@/app/_components/feature_grid/history_tile";
-import MapTile from "@/app/_components/feature_grid/map_tile";
-import PoetryTile from "@/app/_components/feature_grid/poetry_tile";
-import VocabBankTile from "@/app/_components/feature_grid/vocab_bank_tile";
+import HistoryTile from "@/components/featureGrid/historyTile";
+import MapTile from "@/components/featureGrid/mapTile";
+import PoetryTile from "@/components/featureGrid/poetryTile";
+import VocabBankTile from "@/components/featureGrid/vocabBankTile";
 
 const FeatureGrid = () => {
   return (

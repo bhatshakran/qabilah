@@ -1,5 +1,5 @@
 import { Book, Clock } from "lucide-react";
-import { DocumentDTO } from "@/app/_components/article_list";
+import { DocumentDTO } from "@/components/articleList";
 import Link from "next/link";
 
 function ArticlePreview({ article }: { article: DocumentDTO }) {

@@ -4,7 +4,7 @@ import { useAuth } from "@/app/contexts/authContext";
 import { useEffect, useState } from "react";
 import { Comment } from "@/app/models/comment";
 import { Note } from "@/app/models/note";
-import { Sentence } from "./article_list";
+import { Sentence } from "./articleList";
 
 interface SidebarProps {
   isOpen: boolean;

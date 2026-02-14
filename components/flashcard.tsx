@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "@/app/contexts/authContext";
 import { useSigninPopup } from "@/app/hooks/useSigninPopup";
-import Backside from "@/app/_components/backside";
-import FrontSide from "@/app/_components/frontside";
+import Backside from "@/components/backside";
+import FrontSide from "@/components/frontside";
 import { useUserProgress } from "@/app/hooks/useUserProgress";
 import { useVocabularyStore } from "@/stores/vocabularyStore";
 

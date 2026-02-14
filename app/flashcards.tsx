@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useEffectEvent } from "react";
-import ProgressBar from "@/app/_components/progress_bar";
+import ProgressBar from "@/components/progressBar";
 import { useUserProgress } from "@/app/hooks/useUserProgress";
 import { useAuth } from "@/app/contexts/authContext";
 import { useVocabularyStore } from "@/stores/vocabularyStore";
-import ViewHandler from "@/app/_components/viewHandler";
+import ViewHandler from "@/components/viewHandler";
 import { VocabularyDTO } from "@/types/vocabulary";
 
 export type View = "map" | "cards" | "library";

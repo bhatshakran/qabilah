@@ -1,4 +1,4 @@
-import Header from "@/app/_components/header";
+import Header from "@/components/header";
 import FlashcardApp from "@/app/flashcards";
 import { getVocabulary } from "@/app/lib/vocabulary";
 
