@@ -13,7 +13,7 @@ const Header = () => {
   const { showSignin, openSignin, closeSignin } = useSignin();
   const router = useRouter();
   return (
-    <div className="w-full flex items-center justify-between flex-wrap mb-10 pt-4 mx-auto px-4 gap-y-4">
+    <div className="w-full flex items-center justify-between flex-wrap mb-10 pt-4 mx-auto px-4 gap-y-4 bg-zinc-950">
       <Link href={"/"} className="flex items-center gap-3">
         {/* Logo: Geometric Crescent */}
         <div className="relative w-10 h-10 flex items-center justify-center cursor-pointer">
