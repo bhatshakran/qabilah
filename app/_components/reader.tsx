@@ -85,7 +85,6 @@ export default function Reader({
     setPageIndex((p) => Math.max(p - 1, 0));
   };
   useEffect(() => {
-    setActiveBlock(null);
     setSidebarOpen(false);
     setSelectedTokenKey(null);
   }, [pageIndex]);
