@@ -20,7 +20,6 @@ export default function Reader({
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [tab, setTab] = useState<"notebook" | "halaqa">("notebook");
   const [pageIndex, setPageIndex] = useState(0);
-  console.log(readerDocument);
   const isMultiPage = readerDocument.category === "risalah";
   const totalPages = readerDocument.structure.length;
   const currentPage = readerDocument.structure[pageIndex];
