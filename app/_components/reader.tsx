@@ -16,9 +16,11 @@ export default function Reader({
 }) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [selectedTokenKey, setSelectedTokenKey] = useState<string | null>(null);
-  const [activeBlock, setActiveBlock] = useState<number | null>(null);
+  const [activeBlock, setActiveBlock] = useState(
+    readerDocument.structure[0].paragraphs[0].sentences[0],
+  );
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [tab, setTab] = useState<"notebook" | "halaqa">("notebook");
+  const [tab, setTab] = useState<"daftar" | "halaqa">("daftar");
   const [pageIndex, setPageIndex] = useState(0);
   const isMultiPage = readerDocument.category === "risalah";
   const totalPages = readerDocument.structure.length;
@@ -105,7 +107,7 @@ export default function Reader({
       className={`w-full max-w-4xl relative mx-auto mt-6 space-y-10 pb-40 px-4 transition-colors duration-500 ${themeClasses[settings.theme]}`}
     >
       <ArticleSidebar
-        sentenceIndex={activeBlock}
+        activeBlock={activeBlock}
         isOpen={sidebarOpen}
         onClose={() => {
           setSidebarOpen(false);
@@ -255,7 +257,7 @@ export default function Reader({
                   <div className="flex flex-col gap-1 w-6 pt-1 opacity-50 group-hover:opacity-100 transition-opacity">
                     <button
                       onClick={() => {
-                        setActiveBlock(s.sentenceIndex);
+                        setActiveBlock(s);
                         setSidebarOpen(true);
                         setTab("halaqa");
                       }}
@@ -265,9 +267,9 @@ export default function Reader({
                     </button>
                     <button
                       onClick={() => {
-                        setActiveBlock(s.sentenceIndex);
+                        setActiveBlock(s);
                         setSidebarOpen(true);
-                        setTab("notebook");
+                        setTab("daftar");
                       }}
                       className="p-1 hover:text-amber-500 text-zinc-700 transition-colors"
                     >

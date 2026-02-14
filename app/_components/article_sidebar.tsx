@@ -4,23 +4,24 @@ import { useAuth } from "@/app/contexts/authContext";
 import { useEffect, useState } from "react";
 import { Comment } from "@/app/models/comment";
 import { Note } from "@/app/models/note";
+import { Sentence } from "./article_list";
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
-  sentenceIndex: number | null;
-  tab: "halaqa" | "notebook";
-  setTab: (s: "halaqa" | "notebook") => void;
+  tab: "halaqa" | "daftar";
+  setTab: (s: "halaqa" | "daftar") => void;
   slug: string;
+  activeBlock: Sentence;
 }
 
 export default function ArticleSidebar({
   isOpen,
   onClose,
-  sentenceIndex,
   tab,
   setTab,
   slug,
+  activeBlock,
 }: SidebarProps) {
   const { user } = useAuth();
   const [content, setContent] = useState("");
@@ -67,7 +68,7 @@ export default function ArticleSidebar({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           type: tab === "halaqa" ? "comment" : "note",
-          sentenceIndex: sentenceIndex,
+          sentenceIndex: activeBlock.sentenceIndex,
           content: content,
           authorName: user.email.split("@")[0],
         }),
@@ -110,10 +111,10 @@ export default function ArticleSidebar({
             <MessageSquare size={14} /> Halaqa
           </button>
           <button
-            onClick={() => setTab("notebook")}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-tighter transition-all ${tab === "notebook" ? "bg-zinc-800 text-amber-500" : "text-zinc-500"}`}
+            onClick={() => setTab("daftar")}
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-black uppercase tracking-tighter transition-all ${tab === "daftar" ? "bg-zinc-800 text-amber-500" : "text-zinc-500"}`}
           >
-            <BookOpen size={14} /> Notebook
+            <BookOpen size={14} /> Daftar
           </button>
         </div>
         <button
@@ -126,10 +127,10 @@ export default function ArticleSidebar({
 
       {/* Content Area */}
       <div className="flex-1 overflow-y-auto p-4 space-y-6">
-        {sentenceIndex !== null && (
+        {activeBlock?.sentenceIndex !== null && (
           <div className="bg-amber-500/5 border border-amber-500/20 p-3 rounded-xl mb-4">
             <span className="text-[10px] text-amber-500 font-black uppercase tracking-widest">
-              Context: Paragraph {sentenceIndex}
+              Context: {activeBlock?.ar}
             </span>
           </div>
         )}
@@ -137,12 +138,12 @@ export default function ArticleSidebar({
         {tab === "halaqa" ? (
           <HalaqaFeed
             publicComments={data.publicComments}
-            sentenceIndex={sentenceIndex}
+            sentenceIndex={activeBlock.sentenceIndex}
           />
         ) : (
           <NotebookView
             personalNotes={data.personalNotes}
-            sentenceIndex={sentenceIndex}
+            sentenceIndex={activeBlock.sentenceIndex}
             onUpdate={handleNoteUpdate}
             onDelete={handleNoteDelete}
             slug={slug}
@@ -238,17 +239,21 @@ function NotebookView({
       return;
 
     setIsDeleting(true);
-    const res = await fetch(`/api/documents/${slug}/interaction`, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ noteId: id }),
-    });
+    try {
+      const res = await fetch(`/api/documents/${slug}/interaction`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ noteId: id }),
+      });
 
-    if (res.ok) {
-      onDelete(id);
-    } else {
-      setIsDeleting(false);
+      if (res.ok) {
+        onDelete(id);
+      }
+    } catch (error) {
+      console.log(error);
       alert("Failed to delete");
+    } finally {
+      setIsDeleting(false);
     }
   };
   const handleStartEdit = (note: Note) => {

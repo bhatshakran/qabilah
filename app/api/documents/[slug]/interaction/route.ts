@@ -16,21 +16,11 @@ export async function POST(
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const decoded = jwt.verify(token, process.env.JWT_SECRET!) as any;
-    console.log(decoded, "decoded");
     const { type, sentenceIndex, content, authorName } = await request.json();
 
     await connectToDatabase();
     const { slug } = await context.params;
-    console.log(
-      {
-        slug,
-        sentenceIndex,
-        userId: decoded.id,
-        authorName: authorName || "Anonymous Warrior",
-        content,
-      },
-      "detaildss",
-    );
+
     if (type === "comment") {
       const newComment = await Comment.create({
         slug,
