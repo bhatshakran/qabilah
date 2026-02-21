@@ -35,13 +35,22 @@ const Map = () => {
           const isLocked =
             level > 1 &&
             (() => {
-              const prevLevelMax = (level - 1) * wordsPerLevel;
-              const prevWords = wordsData.filter(
+              // Look at level 1 to decide if level 2 is locked
+              const prevLevel = level - 1;
+              const prevLevelWords = wordsData.filter(
                 (w) =>
-                  w.rank > (level - 2) * wordsPerLevel &&
-                  w.rank <= prevLevelMax,
+                  w.rank > (prevLevel - 1) * wordsPerLevel &&
+                  w.rank <= prevLevel * wordsPerLevel,
               );
-              return prevWords.some((w) => !masteredIds.includes(w.rank));
+
+              const prevMasteredCount = prevLevelWords.filter((w) =>
+                masteredIds.includes(w.rank),
+              ).length;
+
+              const prevProgress = (prevMasteredCount / wordsPerLevel) * 100;
+
+              // If previous level progress is less than 80, this level is LOCKED
+              return prevProgress < 80;
             })();
 
           return (

@@ -22,7 +22,9 @@ export default function FlashcardApp({
     setView,
     setIsReviewMode,
     setQueue,
+    queue,
     selectedLevel,
+    setSelectedLevel,
     getDerivedStats,
     setWordsData,
     setMasteredIds,
@@ -31,7 +33,9 @@ export default function FlashcardApp({
   const { progress } = useUserProgress(user ? user.id : null);
   const masteredIds = progress?.mastered_words ?? [];
   const { wordsPerLevel } = getDerivedStats();
+  const maxRank = masteredIds.length > 0 ? Math.max(...masteredIds) : 0;
 
+  const predictedLevel = Math.floor(maxRank / 10) + 1;
   // 3. SYNC: Push wordsData prop to store
   useEffect(() => {
     if (wordsData) setWordsData(wordsData);
@@ -61,7 +65,7 @@ export default function FlashcardApp({
     const unmastered = allWordsInThisLevel.filter(
       (w) => !savedMasteredNumbers.includes(w.rank),
     );
-
+    console.log("we here", queue, unmastered);
     if (unmastered.length > 0) {
       setQueue(unmastered.slice(0, 10));
       setIsReviewMode(false);
@@ -103,7 +107,10 @@ export default function FlashcardApp({
           MAP
         </button>
         <button
-          onClick={() => setView("cards")}
+          onClick={() => {
+            setSelectedLevel(predictedLevel);
+            setView("cards");
+          }}
           className={`px-6 py-2 cursor-pointer rounded-full text-xs font-black transition-all ${view === "cards" ? "bg-amber-500 text-black" : "text-zinc-400"}`}
         >
           FLASHCARDS

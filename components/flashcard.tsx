@@ -10,68 +10,80 @@ const Flashcard = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const { user } = useAuth();
   const { syncMastery } = useUserProgress(user ? user.id : null);
-  const { isReviewMode, setQueue, queue } = useVocabularyStore();
+  const { setQueue, queue } = useVocabularyStore();
+
+  useSigninPopup(user);
+
   const currentWord = queue[0];
-  const markAsMastered = (id: number) => {
-    setIsFlipped(false);
-    if (!isReviewMode) {
-      // Logic is now on the server!
-      syncMastery(id);
-      setQueue(queue.slice(1));
-    } else {
-      setQueue(queue.slice(1));
+
+  // --- The Unified Logic Handler ---
+  const handleResponse = (action: "again" | "good" | "easy") => {
+    if (!currentWord) return;
+    setIsFlipped(false); // Reset flip for next card
+
+    switch (action) {
+      case "easy":
+        // 1. Permanent Pass: Save to DB & remove from session
+        syncMastery(currentWord.rank);
+        break;
+
+      case "good":
+        // 2. Hesitant Pass: Move 3 cards back (Strict learning)
+        const [firstG, ...restG] = queue;
+        const insertIndex = Math.min(3, restG.length);
+        const newQueueG = [
+          ...restG.slice(0, insertIndex),
+          firstG,
+          ...restG.slice(insertIndex),
+        ];
+        setQueue(newQueueG);
+        break;
+
+      case "again":
+        // 3. Fail: Move to the very back
+        const [firstA, ...restA] = queue;
+        setQueue([...restA, firstA]);
+        break;
     }
   };
-  useSigninPopup(user);
-  // --- Event Handlers (Stay the same) ---
-  const handleAgain = () => {
-    setIsFlipped(false);
-    const [first, ...rest] = queue;
-    const updatedQueue = [...rest, first];
-    setQueue(updatedQueue);
-  };
 
-  const handleGood = () => {
-    setIsFlipped(false);
-    setQueue(queue.slice(1));
-  };
-  // Keyboard support remains same...
+  // Keyboard Support
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (!currentWord) return;
+
       if (e.code === "Space") {
         e.preventDefault();
         setIsFlipped((v) => !v);
       }
+
       if (isFlipped) {
-        if (e.key === "1") handleAgain();
-        if (e.key === "2") handleGood();
-        if (e.key === "3") markAsMastered(currentWord.rank);
+        if (e.key === "1") handleResponse("again");
+        if (e.key === "2") handleResponse("good");
+        if (e.key === "3") handleResponse("easy");
       }
     };
+
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [isFlipped, currentWord, markAsMastered]);
+  }, [isFlipped, currentWord]);
+
+  if (!currentWord) return null;
+
   return (
-    <div
-      onClick={() => setIsFlipped(!isFlipped)}
-      className="relative w-full max-w-lg h-full max-h-[350px] cursor-pointer perspective-1000"
-    >
-      {isReviewMode && (
-        <div className="mb-4 px-4 py-1 bg-blue-500/10 border border-blue-500/20 rounded-full inline-block">
-          <span className="text-blue-500 text-[10px] font-black uppercase tracking-widest text-center">
-            Reviewing Mastered Words
-          </span>
-        </div>
-      )}
+    <div className="relative w-full max-w-lg h-full max-h-[350px] perspective-1000">
       <div
-        className={`relative w-full h-full min-h-[400px] transition-transform duration-500 transform-style-3d ${isFlipped ? "rotate-y-180" : ""}`}
+        onClick={() => setIsFlipped(!isFlipped)}
+        className={`relative w-full h-full min-h-[400px] transition-transform duration-500 transform-style-3d cursor-pointer ${
+          isFlipped ? "rotate-y-180" : ""
+        }`}
       >
         <FrontSide currentWord={currentWord} />
         <Backside
-          handleGood={handleGood}
-          handleAgain={handleAgain}
-          markAsMastered={markAsMastered}
+          // Pass the unified handler to the UI buttons
+          handleAgain={() => handleResponse("again")}
+          handleGood={() => handleResponse("good")}
+          markAsMastered={() => handleResponse("easy")}
           currentWord={currentWord}
         />
       </div>
